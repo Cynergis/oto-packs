@@ -8,7 +8,8 @@ description: >
 
 # The PRD + Architecture site, from the graph
 
-The site is an OTO view, `${CLAUDE_PLUGIN_ROOT}/views/prd-site`: `app.json` declares the data file
+The site is an OTO view this pack ships, `prd-site`, installed in the project's `views/` when the
+project starts from the pack: `app.json` declares the data file
 it reads (`data.js`: `window.__PRD__`, `window.__ARCH__`) and the projections that fill it from the
 knowledge base. There is no data file to author: what the graph holds is what the site shows, dated;
 a section the graph cannot fill is empty until a section is captured (**elicit**).
@@ -18,9 +19,9 @@ a section the graph cannot fill is empty until a section is captured (**elicit**
 1. The project: an OTO project with a build (`oto status --project <root>`; `oto build` if it is
    stale). The view requires the product's classes (`app.json`, `requires`); a project that lacks
    them is refused with the names.
-2. **See it live**: `oto serve --project <root> --view ${CLAUDE_PLUGIN_ROOT}/views/prd-site`, then
+2. **See it live**: `oto serve --project <root> --view prd-site`, then
    open the URL it prints. The page reads the store; a rebuild shows up on reload.
-3. **Publish it**: `oto build --project <root> --target site --view ${CLAUDE_PLUGIN_ROOT}/views/prd-site`
+3. **Publish it**: `oto build --project <root> --target site --view prd-site`
    writes `build/site/` (the four files and `data.js` generated); `bash build/site/publish.sh
    <repo url>` puts it on GitHub Pages. Mermaid loads from a CDN, so viewing needs internet.
 4. Say what the site shows and what it cannot yet: read `data.js`'s empty sections back as the

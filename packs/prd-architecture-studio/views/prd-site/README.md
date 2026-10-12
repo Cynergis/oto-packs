@@ -10,8 +10,8 @@ projections (`projections/prd.json`, `projections/arch.json`) that fill `window.
 base, dated, on every build, so the site shows what is believed and nothing else.
 
 ```bash
-oto serve --project <root> --view <plugin>/views/prd-site        # live, from the store
-oto build --project <root> --target site --view <plugin>/views/prd-site   # static: build/site/
+oto serve --project <root> --view prd-site                        # live, from the store
+oto build --project <root> --target site --view prd-site          # static: build/site/
 bash publish.sh https://github.com/<you>/<repo>.git               # the static site to GitHub Pages
 ```
 

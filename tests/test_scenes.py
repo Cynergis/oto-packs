@@ -49,7 +49,8 @@ def _captured(root, *captures):
     assert oto_cli("build", "--project", root)[0] == 0
 
 
-VIEW = ROOT / "views" / "prd-site"
+PACK = ROOT / "packs" / "prd-architecture-studio"
+VIEW = PACK / "views" / "prd-site"
 
 
 def oto_cli(*args, cwd=None, env=None):
@@ -245,3 +246,25 @@ def test_scene_6_the_site_is_a_view_of_the_graph_and_scene_7_readers_install_a_p
         code, out = oto_cli("query", "--project", synced, "brief", "implement-step", env=sandbox)
         assert code == 0 and "4 READY, 0 BLOCKED" in out, out
         assert os.path.exists(os.path.join(synced, "site", "data.js")), "the site travels with the store"
+
+
+def test_the_studio_is_a_pack_and_atlas_starts_a_product_from_it_with_its_type_and_the_flow():
+    # the pack: skills, the ddd vocabulary and the site view, validated together
+    code, out = oto_cli("pack", "check", str(PACK))
+    assert code == 0 and "check clean" in out and "7 skill(s), 1 view(s)" in out, out
+    with tempfile.TemporaryDirectory() as root:
+        # scene 1, as Atlas runs it: the pack, with the product type and the flow merged beside it
+        code, out = oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--pack", str(PACK),
+                            "--ontology", "product-report,flow", "--empty", "--project", root)
+        assert code == 0 and "pack: prd-architecture-studio @" in out and "wrote: views/prd-site" in out, out
+        code, out = oto_cli("status", "--project", root)
+        assert code == 0 and "via pack prd-architecture-studio" in out, out
+        # scenes 2 to 5 against it: the specification, the design, the flow, through the gates
+        assert oto_cli("curate", "start", "--project", root)[0] == 0
+        _captured(root, CAPTURE, DESIGN, FLOW, FLOW_FIELDS)
+        # scene 6: the site by name, from the project's own views
+        code, out = oto_cli("build", "--project", root, "--target", "site", "--view", "prd-site")
+        assert code == 0 and "site with app prd-site" in out, out
+        g = _globals(os.path.join(root, "build", "site"))
+        assert g["PRD"]["overview"]["projectName"] == "Fund report automation"
+        assert g["ARCH"]["domains"][0]["components"][0]["id"] == "boundedcontext.fund-report.bc-def"
