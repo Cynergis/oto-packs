@@ -2,7 +2,7 @@
 name: prd-build
 description: >
   Build a product's specification (the PRD) as a knowledge base: captures it against the `product`
-  pack and the product type's pack (`product-report`, …) through the capture skill, section by
+  pack and the product type's pack (`product-report`, …) through the elicit skill, section by
   section, each confirmed section contributed through the curate gates. Guided interview or
   structure-from-notes. Use when the user wants to create or extend a PRD, capture requirements,
   personas, journeys, use cases, policies, governance, risk, scope or success metrics.
@@ -16,7 +16,7 @@ under what rules, why. It is captured against packs, not against a form of this 
 1. The project composes `product` and the product type's pack (`oto init --empty --ontology
    product,product-report`, or Atlas's scene 1). If the type's pack does not exist yet, capture
    against `product` alone and tell the person what a type pack would add.
-2. Run the **capture** skill with the schema of that project. Its sections are the askers the
+2. Run the **elicit** skill with the schema of that project. Its sections are the askers the
    packs name — the sponsor, the product owner, the builder, compliance, the report product
    owner, the data team — and its items are personas, journeys, requirements, policies, decisions,
    risks, objectives, criteria, terms, and the obligations typed by what they govern.

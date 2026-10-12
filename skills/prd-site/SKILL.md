@@ -11,7 +11,7 @@ description: >
 The site is an OTO view, `${CLAUDE_PLUGIN_ROOT}/views/prd-site`: `app.json` declares the data file
 it reads (`data.js`: `window.__PRD__`, `window.__ARCH__`) and the projections that fill it from the
 knowledge base. There is no data file to author: what the graph holds is what the site shows, dated;
-a section the graph cannot fill is empty until a section is captured (**capture**).
+a section the graph cannot fill is empty until a section is captured (**elicit**).
 
 ## Steps
 

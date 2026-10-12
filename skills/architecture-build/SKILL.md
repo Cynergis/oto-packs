@@ -2,7 +2,7 @@
 name: architecture-build
 description: >
   Design the solution as a knowledge base: captures the architecture against the
-  `software-architecture` and `ddd` packs through the capture skill — context and drivers, ADRs,
+  `software-architecture` and `ddd` packs through the elicit skill — context and drivers, ADRs,
   systems, components, interfaces, stores, environments, bounded contexts, aggregates, events —
   every component traced to the requirement it satisfies, every decision recorded with its
   alternatives. Use when the user wants to design or extend the architecture, record an ADR, or
@@ -18,7 +18,7 @@ says. Captured against packs, cross-linked to the specification by relations, no
    product-report,ddd`, or Atlas's scene 4): `ddd` sits on `software-architecture`, which sits on
    `product`, so one name brings the estate and the model, and a project that already has the
    specification adds `ddd` to its `ontology` and re-runs `oto ontology capture`.
-2. Run the **capture** skill with the schema of that project. Its askers are the architect, the
+2. Run the **elicit** skill with the schema of that project. Its askers are the architect, the
    on-call engineer, the data owner, the risk owner, the builder, compliance; its items are
    systems, components, interfaces, data stores, environments, teams, runbooks, repositories
    (the estate) and subdomains, bounded contexts and their map, use cases, events, commands,

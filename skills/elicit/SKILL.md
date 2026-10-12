@@ -1,17 +1,18 @@
 ---
-name: capture
+name: elicit
 description: >
-  Capture a specification or a design against an OTO pack: the pack's capture schema says which
-  questions to ask, by whom, and which items with which fields and links each needs; the person
-  answers, confirms a section, and the section becomes facts in the knowledge base through the
-  curate gates. Guided interview, or structure-from-notes. Use when Atlas specifies or designs,
-  or when the user wants to capture a PRD, an architecture, requirements, personas, journeys,
-  policies, decisions, components or any section of a product against a pack.
+  The studio's elicitation: a specification or a design captured against an OTO pack, through
+  OTO's capture-form, with the BMAD menu ([A] elicit, [P] perspectives, [C] continue) at every
+  confirmation; each confirmed section becomes facts in the knowledge base through the curate
+  gates. Guided interview, or structure-from-notes. Use when Atlas specifies or designs, or when
+  the user wants to capture a PRD, an architecture, requirements, personas, journeys, policies,
+  decisions, components or any section of a product against a pack.
 ---
 
-# Capture against a pack
+# Elicit against a pack
 
-The pack knows what to ask. OTO's **capture-form** skill asks it: it reads `capture.json`, takes
+Called `capture` before studio 2.1.0; renamed so it is not mistaken for OTO's **capture** (a
+spoken statement into the inbox). The pack knows what to ask. OTO's **capture-form** skill asks it: it reads `capture.json`, takes
 the questions group by group, and sends every confirmed group through the curate gates. Run it;
 this skill adds the studio's way of running it. You are a facilitator and a peer; never invent
 content the person has not confirmed.

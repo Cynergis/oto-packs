@@ -1,6 +1,6 @@
 {
   "name": "prd-architecture-studio",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Atlas, the Lead Product Engineer, and the studio's skills, version 2: capture a product's specification and design against OTO packs, contribute every confirmed section to the knowledge base through the curate gates, derive what the product must know, publish, and hand readers their install line. Depends on the oto plugin.",
   "author": {
     "name": "chiheb"

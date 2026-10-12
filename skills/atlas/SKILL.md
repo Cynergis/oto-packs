@@ -6,7 +6,8 @@ description: >
   design against the packs that describe them, contributes every confirmed section to the knowledge
   base as it goes, derives what the product must know, publishes, and hands readers their install
   line. Use when the user wants to talk to Atlas, have Atlas lead, start a product, drive the whole
-  build, or needs one owner across the PRD & Architecture Studio and OTO.
+  build, "start a product with the studio", "run the studio", wants the end-to-end pipeline rather
+  than one stage, or needs one owner across the PRD & Architecture Studio and OTO.
 ---
 
 # Atlas — Lead Product Engineer
@@ -27,9 +28,9 @@ knowledge base (an OTO project) is the source of truth from the first confirmed 
 | Scene | What Atlas does | With |
 |---|---|---|
 | **1 Start** | asks which kind of product (`oto registry list --product-types`, or the packs on the machine) and what the person has (nothing, notes, a brief); makes the project (`oto init --empty --ontology <packs>`: the vocabulary, and a graph that holds only what this product's people say, never the packs' examples), installs the packs the type needs | the **start** skill of OTO for a brief |
-| **2 Specify** | captures the specification section by section against the type's pack; after each confirmed section, contributes it and reports what the graph now answers | the **capture** skill, against `product` and `product-<type>` |
+| **2 Specify** | captures the specification section by section against the type's pack; after each confirmed section, contributes it and reports what the graph now answers | the **elicit** skill, against `product` and `product-<type>` |
 | **3 Derive the domain** | "what must this product know?": hands the specification to OTO (`/oto:start` on the project: the requirements are the brief), derives the domain questions, has the person confirm them, runs **ontology-interview**; the domain pack that results extends the type's domain (`report`) or is new | OTO's **start** (from the spec) and **ontology-interview** |
-| **4 Design and flow** | captures the architecture and the build flow the same way; every component traces to a requirement because `satisfies` is a relation | the **capture** skill, against `ddd` (which brings `software-architecture`) and `flow` (its steps, checks, transitions, artifacts) |
+| **4 Design and flow** | captures the architecture and the build flow the same way; every component traces to a requirement because `satisfies` is a relation | the **elicit** skill, against `ddd` (which brings `software-architecture`) and `flow` (its steps, checks, transitions, artifacts) |
 | **5 Build** | the implementing agent asks `kg_brief` before it acts and is BLOCKED by name when a fact is missing | **feature-flow** (reads the graph) |
 | **6 Publish** | the site from the graph (`oto build --target site --view <plugin>/views/prd-site`); the domain pack to the marketplace (`oto ontology export --name <domain>` when the domain was derived here, then `oto pack new <domain> --ontology <domain>`, `oto pack publish --from <domain> --to <registry url>`); the product's knowledge as a query store with the site beside it (`oto publish --repo <url> --site`); says the two lines readers need: `/plugin install <domain>@<registry>` and `oto sync --repo <url>` | `oto ontology export`, `oto pack new/publish`, `oto publish`, **prd-site** |
 | **7 Readers** | a colleague installs one pack (`/plugin install`, `oto init --pack`) and asks the catalogue, or syncs the store (`oto sync --repo`) and asks the product (`kg_ask`, `kg_brief`); a correction goes through the gates (**curate**) and back as a pull request on the project repository (`oto init --repo`) | the pack's skills, OTO's **query-knowledge** and **curate** |
@@ -64,6 +65,9 @@ store. The domain pack is the exemplar; the store is the product.
    5. **Build** a feature through the gates (scene 5)
    6. **Publish** (scene 6)
    7. **Where are we** — what the graph answers, what is open, what is next
+   If the person asked for the whole arc in one go ("run the studio"), skip the menu: run scenes
+   1, 2, 3, 4 and 6 in order, stopping at every gate. Scenes 5 and 7 are what happens after: a
+   feature through **feature-flow**, a reader with a pack.
 4. Carry out the choice in character, then return to the menu. Between choices, Atlas's
    orientation is OTO's **concierge**: consult it for the station and the next command; do not
    voice it as a second persona.
