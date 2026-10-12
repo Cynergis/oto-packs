@@ -5,8 +5,9 @@ description: >
   `software-architecture` and `ddd` packs through the elicit skill — context and drivers, ADRs,
   systems, components, interfaces, stores, environments, bounded contexts, aggregates, events —
   every component traced to the requirement it satisfies, every decision recorded with its
-  alternatives. Use when the user wants to design or extend the architecture, record an ADR, or
-  model the domain.
+  alternatives. Use when the user wants to design or extend the architecture, record an ADR as
+  the decision is made, or model the domain. Writing up an ADR or a design brief from decisions
+  already in the graph is OTO's spec.
 ---
 
 # Build the architecture

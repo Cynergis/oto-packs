@@ -5,7 +5,8 @@ description: >
   pack and the product type's pack (`product-report`, …) through the elicit skill, section by
   section, each confirmed section contributed through the curate gates. Guided interview or
   structure-from-notes. Use when the user wants to create or extend a PRD, capture requirements,
-  personas, journeys, use cases, policies, governance, risk, scope or success metrics.
+  personas, journeys, use cases, policies, governance, risk, scope or success metrics. Writing a
+  specification document out of what the graph already holds is OTO's spec.
 ---
 
 # Build a PRD

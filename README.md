@@ -56,7 +56,7 @@ Then: **"Atlas, lead this product."** See `GETTING-STARTED.md`, and `WALKTHROUGH
 ## Tests
 
 `tests/test_scenes.py` runs scenes 1 to 7 scripted on the report application against the OTO
-release the plugin pins (`oto.release` in `.claude-plugin/plugin.json`, 0.11.2; `OTO_HOME` or `oto-kg` installed, and the `product` and `product-report`
+release the plugin pins (`oto.release` in `.claude-plugin/plugin.json`, 0.11.4; `OTO_HOME` or `oto-kg` installed, and the `product` and `product-report`
 packs on the machine, plus `ddd` and `flow`): the project, a capture of the report product's obligations, the gates, the
 questions the graph answers and the ones left open, the design and the flow traced to the specification, and the
 implementing agent's brief: BLOCKED by name, the missing fact captured, READY; the site from the graph, the domain pack on
