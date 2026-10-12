@@ -46,14 +46,15 @@ requirements it would add or change — each as a capture item, ready for the **
 
 Only after Gate 1. Ask the graph, not the code:
 
-- **Design surface** — `kg_ask SA17` (requirements nothing satisfies yet), `kg_ask DD24`
-  (use cases satisfying no requirement), `kg_neighbors` on the contexts, components and
-  aggregates the requirement reaches (`satisfies`, `deployed_as`, `part_of`).
+- **Design surface** — `kg_ask SA17` (requirements nothing satisfies yet), `kg_ask SA8
+  ASSET=<asset>` (what an asset satisfies), `kg_neighbors` on the systems and components the
+  requirement reaches (`satisfies`, `part_of`); for a part designed with DDD, `kg_ask DD24` (use
+  cases satisfying no requirement) and the contexts and aggregates (`deployed_as`).
 - **Flow surface** — `kg_brief impact-artifact ARTIFACT=<artifact>` and `kg_brief
   impact-parameter PARAM=<parameter>` for anything the feature changes; `kg_ask FL9
   STEP=<step>` for who consumes what a step writes.
-- **Decisions and risks** — `kg_ask DD19 THING=<element>` (why it is the way it is), `kg_ask
-  PR13` (what threatens what).
+- **Decisions and risks** — `kg_ask SA9 ASSET=<asset>` (why it is the way it is; `DD19` for a
+  DDD element), `kg_ask PR13` (what threatens what).
 - **Rating** — low / medium / high effort and risk, from the number of elements reached. No time
   estimates.
 

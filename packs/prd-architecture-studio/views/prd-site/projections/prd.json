@@ -105,20 +105,22 @@
    }
   },
   "dependencies": {
-   "$nodes": "ExternalSystem",
-   "$sort": "label",
-   "$map": {
-    "id": "$id",
-    "product": "$label",
-    "direction": {
-     "$const": "bidirectional"
-    },
-    "nature": "$summary",
-    "status": "$status",
-    "notes": {
-     "$first": {
-      "$out": "integrated_by",
-      "$select": "$label"
+   "$optional": {
+    "$nodes": "ExternalSystem",
+    "$sort": "label",
+    "$map": {
+     "id": "$id",
+     "product": "$label",
+     "direction": {
+      "$const": "bidirectional"
+     },
+     "nature": "$summary",
+     "status": "$status",
+     "notes": {
+      "$first": {
+       "$out": "integrated_by",
+       "$select": "$label"
+      }
      }
     }
    }
@@ -246,57 +248,59 @@
   }
  },
  "usecases": {
-  "$nodes": "UseCase",
-  "$sort": "label",
-  "$map": {
-   "id": "$id",
-   "title": "$label",
-   "journeyId": "",
-   "primaryActor": {
-    "$first": {
-     "$out": "performed_by",
-     "$select": "$id"
-    }
-   },
-   "supportingActors": "",
-   "trigger": "",
-   "preconditions": "",
-   "orchestration": {
-    "$first": {
-     "$out": "part_of",
+  "$optional": {
+   "$nodes": "UseCase",
+   "$sort": "label",
+   "$map": {
+    "id": "$id",
+    "title": "$label",
+    "journeyId": "",
+    "primaryActor": {
+     "$first": {
+      "$out": "performed_by",
+      "$select": "$id"
+     }
+    },
+    "supportingActors": "",
+    "trigger": "",
+    "preconditions": "",
+    "orchestration": {
+     "$first": {
+      "$out": "part_of",
+      "$select": "$label"
+     }
+    },
+    "repeatability": "$attr.readiness",
+    "postconditions": "",
+    "mainFlow": {
+     "$out": "issues",
      "$select": "$label"
-    }
-   },
-   "repeatability": "$attr.readiness",
-   "postconditions": "",
-   "mainFlow": {
-    "$out": "issues",
-    "$select": "$label"
-   },
-   "extensions": {
-    "$const": []
-   },
-   "terminalStates": {
-    "$const": []
-   },
-   "frs": {
-    "$out": "satisfies",
-    "$select": "$id"
-   },
-   "workflow": "",
-   "acceptance": {
-    "$in": "exercises",
-    "$select": {
-     "title": "$label",
-     "given": [
-      "$attr.given"
-     ],
-     "when": [
-      "$attr.when"
-     ],
-     "then": [
-      "$attr.then"
-     ]
+    },
+    "extensions": {
+     "$const": []
+    },
+    "terminalStates": {
+     "$const": []
+    },
+    "frs": {
+     "$out": "satisfies",
+     "$select": "$id"
+    },
+    "workflow": "",
+    "acceptance": {
+     "$in": "exercises",
+     "$select": {
+      "title": "$label",
+      "given": [
+       "$attr.given"
+      ],
+      "when": [
+       "$attr.when"
+      ],
+      "then": [
+       "$attr.then"
+      ]
+     }
     }
    }
   }

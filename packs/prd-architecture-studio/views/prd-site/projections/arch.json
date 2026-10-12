@@ -52,153 +52,155 @@
   "$const": []
  },
  "domains": {
-  "$nodes": "Subdomain",
-  "$sort": "label",
-  "$map": {
-   "id": "$id",
-   "name": "$label",
-   "color": {
-    "$const": "#4f6d8f"
-   },
-   "summary": "$summary",
-   "aggregate": {
-    "name": {
-     "$first": {
-      "$out": "realised_in",
-      "$select": {
-       "$first": {
-        "$in": "part_of",
-        "$where": {
-         "type": "Aggregate"
-        },
-        "$select": "$label"
+  "$optional": {
+   "$nodes": "Subdomain",
+   "$sort": "label",
+   "$map": {
+    "id": "$id",
+    "name": "$label",
+    "color": {
+     "$const": "#4f6d8f"
+    },
+    "summary": "$summary",
+    "aggregate": {
+     "name": {
+      "$first": {
+       "$out": "realised_in",
+       "$select": {
+        "$first": {
+         "$in": "part_of",
+         "$where": {
+          "type": "Aggregate"
+         },
+         "$select": "$label"
+        }
        }
       }
+     },
+     "store": "",
+     "description": "",
+     "tables": {
+      "$const": []
      }
     },
-    "store": "",
-    "description": "",
-    "tables": {
+    "maps": {
      "$const": []
-    }
-   },
-   "maps": {
-    "$const": []
-   },
-   "components": {
-    "$out": "realised_in",
-    "$select": {
-     "id": "$id",
-     "name": "$label",
-     "overview": "$summary",
-     "mapsTo": {
-      "$in": "part_of",
-      "$where": {
-       "type": "UseCase"
-      },
-      "$select": {
-       "$first": {
-        "$out": "satisfies",
-        "$select": "$id"
-       }
-      }
-     },
-     "trigger": {
-      "$in": "part_of",
-      "$where": {
-       "type": "Command"
-      },
-      "$select": {
-       "type": {
-        "$const": "Command"
+    },
+    "components": {
+     "$out": "realised_in",
+     "$select": {
+      "id": "$id",
+      "name": "$label",
+      "overview": "$summary",
+      "mapsTo": {
+       "$in": "part_of",
+       "$where": {
+        "type": "UseCase"
        },
-       "name": "$label",
-       "desc": "$summary",
-       "schema": "$attr.payload"
-      }
-     },
-     "businessRules": {
-      "$in": "part_of",
-      "$where": {
-       "type": "BusinessRule"
-      },
-      "$select": {
-       "rule": "$label",
-       "ref": "$attr.kind"
-      }
-     },
-     "command": {
-      "$in": "part_of",
-      "$where": {
-       "type": "Command"
-      },
-      "$select": {
-       "command": "$label",
-       "ref": ""
-      }
-     },
-     "readModel": {
-      "$in": "part_of",
-      "$where": {
-       "type": "ReadModel"
-      },
-      "$select": {
-       "type": {
-        "$const": "Database"
-       },
-       "table": "$label",
-       "desc": "$summary"
-      }
-     },
-     "writeModel": {
-      "$in": "part_of",
-      "$where": {
-       "type": "DomainEvent"
-      },
-      "$select": {
-       "type": {
-        "$const": "Subdomain"
-       },
-       "table": "$label",
-       "desc": "$summary"
-      }
-     },
-     "resource": {
-      "$out": "deployed_as",
-      "$select": "$id"
-     },
-     "dependency": {
-      "$const": []
-     },
-     "hotspot": {
-      "$in": "about",
-      "$where": {
-       "type": "OpenQuestion"
-      },
-      "$select": {
-       "level": {
-        "$const": "Question"
-       },
-       "text": "$label"
-      }
-     },
-     "code": {
-      "path": "$attr.deployment_unit",
-      "repo": "",
-      "pipeline": "",
-      "tests": "",
-      "coverage": "",
-      "app": "",
-      "dashboard": "",
-      "runbook": "",
-      "owners": {
-       "$first": {
-        "$out": "owned_by",
-        "$select": "$label"
+       "$select": {
+        "$first": {
+         "$out": "satisfies",
+         "$select": "$id"
+        }
        }
       },
-      "logs": {
+      "trigger": {
+       "$in": "part_of",
+       "$where": {
+        "type": "Command"
+       },
+       "$select": {
+        "type": {
+         "$const": "Command"
+        },
+        "name": "$label",
+        "desc": "$summary",
+        "schema": "$attr.payload"
+       }
+      },
+      "businessRules": {
+       "$in": "part_of",
+       "$where": {
+        "type": "BusinessRule"
+       },
+       "$select": {
+        "rule": "$label",
+        "ref": "$attr.kind"
+       }
+      },
+      "command": {
+       "$in": "part_of",
+       "$where": {
+        "type": "Command"
+       },
+       "$select": {
+        "command": "$label",
+        "ref": ""
+       }
+      },
+      "readModel": {
+       "$in": "part_of",
+       "$where": {
+        "type": "ReadModel"
+       },
+       "$select": {
+        "type": {
+         "$const": "Database"
+        },
+        "table": "$label",
+        "desc": "$summary"
+       }
+      },
+      "writeModel": {
+       "$in": "part_of",
+       "$where": {
+        "type": "DomainEvent"
+       },
+       "$select": {
+        "type": {
+         "$const": "Subdomain"
+        },
+        "table": "$label",
+        "desc": "$summary"
+       }
+      },
+      "resource": {
+       "$out": "deployed_as",
+       "$select": "$id"
+      },
+      "dependency": {
        "$const": []
+      },
+      "hotspot": {
+       "$in": "about",
+       "$where": {
+        "type": "OpenQuestion"
+       },
+       "$select": {
+        "level": {
+         "$const": "Question"
+        },
+        "text": "$label"
+       }
+      },
+      "code": {
+       "path": "$attr.deployment_unit",
+       "repo": "",
+       "pipeline": "",
+       "tests": "",
+       "coverage": "",
+       "app": "",
+       "dashboard": "",
+       "runbook": "",
+       "owners": {
+        "$first": {
+         "$out": "owned_by",
+         "$select": "$label"
+        }
+       },
+       "logs": {
+        "$const": []
+       }
       }
      }
     }
@@ -221,22 +223,24 @@
   }
  },
  "integrations": {
-  "$nodes": "ExternalSystem",
-  "$sort": "label",
-  "$map": {
-   "id": "$id",
-   "system": "$label",
-   "direction": {
-    "$const": "bidirectional"
-   },
-   "protocol": "",
-   "data": {
-    "$out": "sends",
-    "$select": "$label"
-   },
-   "auth": "",
-   "dependsOn": "",
-   "notes": "$summary"
+  "$optional": {
+   "$nodes": "ExternalSystem",
+   "$sort": "label",
+   "$map": {
+    "id": "$id",
+    "system": "$label",
+    "direction": {
+     "$const": "bidirectional"
+    },
+    "protocol": "",
+    "data": {
+     "$out": "sends",
+     "$select": "$label"
+    },
+    "auth": "",
+    "dependsOn": "",
+    "notes": "$summary"
+   }
   }
  },
  "security": {

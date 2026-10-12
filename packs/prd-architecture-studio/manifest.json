@@ -5,8 +5,8 @@
   "domain": "product",
   "summary": "Atlas, the Lead Product Engineer, and the studio's skills: a product's specification and design captured against OTO packs through the curate gates, the build with the brief in hand, and the navigable PRD and architecture site.",
   "ontology": {
-    "name": "ddd",
-    "release": 1,
+    "name": "software-architecture",
+    "release": 10,
     "registry": null,
     "source": "built-in",
     "ref": null,
@@ -14,7 +14,7 @@
     "commit": null,
     "embedded_at": "2026-10-12"
   },
-  "engine": ">=0.11.5",
+  "engine": ">=0.11.6",
   "maintainer": "Cynergis",
   "changelog": [
     {

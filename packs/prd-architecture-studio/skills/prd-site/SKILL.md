@@ -34,5 +34,7 @@ PRD: Overview, Strategic Context, Personas, Product, Use Cases / Journey, Specif
 Architecture: Context & Drivers, Decisions, Tech Stack, Components (subdomains → contexts with
 their commands, events, read models, rules), Resources, APIs, Integrations, Security,
 Infrastructure, Design / UX, Project Structure, Knowledge Base. The projection maps each from the
-`product`, `software-architecture` and `ddd` packs; a section no pack covers yet (tech stack,
-design links, the pattern library) is empty by declaration, not by omission.
+`product` and `software-architecture` (in this pack) and, for the parts a product designs with
+DDD, from `ddd`: those sections are optional in the view (`$optional`), so they are empty in a
+product that does not add `ddd`. A section no pack covers yet (tech stack, design links, the
+pattern library) is empty by declaration, not by omission.

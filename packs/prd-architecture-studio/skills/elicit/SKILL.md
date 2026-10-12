@@ -20,9 +20,9 @@ content the person has not confirmed.
 ## Which form
 
 The packs to capture against are the ones the project composes (`project.config.json`,
-`ontology`): for a specification, `product` and `product-<type>`; for a design, `ddd` (which
-brings `software-architecture`). The capture file's `scope` is the product, so its `FR1` stays
-apart from another product's.
+`ontology`): for a specification, `product` and `product-<type>`; for a design,
+`software-architecture` and the pattern each part follows (`ddd`, …). The capture file's `scope`
+is the product, so its `FR1` stays apart from another product's.
 
 ## The studio's confirmation: the BMAD menu
 
