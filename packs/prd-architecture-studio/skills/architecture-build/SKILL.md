@@ -31,13 +31,15 @@ use several (DDD for an application, a medallion pipeline for its data).
    people, the requirements, the policies, the scenarios, the terms, the decisions and the open
    questions are the product's: never captured twice.
 3. **Each part, with its pattern.** Ask which parts follow which pattern; a pattern's ontology
-   must be in the project (scene 1). For a part designed with **DDD** (`ddd`): subdomains,
-   bounded contexts and their map, use cases, events, commands, reactions, read models, external
-   systems, aggregates, entities, value objects, business rules, domain services; a context is
-   `deployed_as` the component that runs it, a use case `satisfies` a requirement (DD24 says what
-   is left). A part with no pattern is designed at step 2 only.
+   must be in the project (scene 1), and its pack does the modelling. For a part designed with
+   **DDD**, the `ddd` pack's **model-domain** skill: strategic design, event storming and the
+   tactical model, a context `deployed_as` the component of step 2, each use case `satisfies` a
+   requirement (DD24), with the ontology's gates. Without that pack installed, capture against
+   the `ddd` form with **elicit** and report DD1–DD3 and DD24. A part with no pattern is designed
+   at step 2 only.
 4. Decision-first: an ADR is captured with its alternatives and consequences before the
    components it shapes; a component with no decision behind it is a finding (`kg_policy`).
 
-What this skill no longer does: keep its own section list, write `window.__ARCH__`, or assume
-that every product is designed with DDD.
+What this skill no longer does: keep its own section list, write `window.__ARCH__`, assume
+that every product is designed with DDD, or carry a pattern's modelling steps (the pattern's
+pack does).
