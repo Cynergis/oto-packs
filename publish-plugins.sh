@@ -23,7 +23,7 @@ for p in report product-report flow work; do
   oto pack publish --from "$p" --to "$REG" --note "stage 5: the report arc on OTO 0.11"
 done
 oto pack publish --from "$HOME/Downloads/prd-architecture-studio/packs/prd-architecture-studio" --to "$REG" \
-  --note "the studio as a pack: its skills, the ddd vocabulary and the prd-site view; needs OTO 0.11.5"
+  --note "the studio as a pack: its skills, the pattern-neutral architecture vocabulary and the prd-site view; needs OTO 0.11.6"
 
 echo "== A4 the plugins in their own repositories"
 oto registry plugin pdf-to-template --to "$REG" --repo Cynergis/pdf-to-template-plugin --version 0.2.0 --category reporting \
