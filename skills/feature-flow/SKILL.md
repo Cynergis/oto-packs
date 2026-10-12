@@ -4,8 +4,8 @@ description: >
   Governed, gated process for adding or changing a product feature, read from the knowledge base:
   validate the idea against the product's purpose (the graph's answers, not a document), stop for
   approval, assess the impact on the design and the flow (the graph's neighbours and briefs), stop
-  for approval, finalize the acceptance scenarios with SME validation, then implement test-first
-  with the brief in hand — BLOCKED by name when a fact the implementation needs is missing. Use
+  for approval, finalize the acceptance scenarios with SME validation, then implement each step
+  test-first through the flow pack's implement-step — BLOCKED by name when a fact is missing. Use
   whenever the user wants to add a feature, change a feature, propose a capability, or build
   product features.
 ---
@@ -76,23 +76,13 @@ case>` shows what exists. Present them for SME review; capture them when validat
 
 ## Phase 4 — Test-first implementation, with the brief
 
-Only after Gate 3. For every step the feature adds or changes:
+Only after Gate 3. For every step the feature adds or changes, run **flow:implement-step** (the
+flow pack): brief first, tests before code, BLOCKED stops the work. On top of it:
 
-1. **Ask the brief before anything.** `kg_brief write-tests STEP=<step>` then `kg_brief
-   implement-step STEP=<step>`. READY: the brief's facts are the specification you implement —
-   cite them in code and tests (`# implements check.fund-report.chk-unmapped`). **BLOCKED**:
-   stop, report the questions and gaps in the engine's words, and have the person capture what is
-   missing (a field specification, a check's metric, an outcome's transition); never guess it,
-   never implement around it. Re-ask until READY.
-2. **Generate the tests first.** FL12 lists the obligations: a pass and a fail case per check, a
-   route per transition, a property per invariant. Scaffold them in the project's stack.
-3. **Implement the code** to satisfy the tests, inside the step's declared reads and writes (FL2),
-   recording its metrics (FL5), reading its parameters from config (FL6).
-4. **Run the tests.** Fix the code or the test honestly; if a failure reveals an incoherence between
-   the feature and how it was accepted, STOP and say so. Never weaken an acceptance criterion.
-5. **Record what became true.** The step is implemented: capture `isImplemented` and the
-   `Implementation` (its path, that it exists) so FL15 stops listing it, and the use case's
-   readiness moves on. The site is regenerated from the graph by **prd-site**.
+- The scenarios validated at Gate 3 are acceptance criteria. Never weaken one to make a test
+  pass; if a failure shows the feature and what was accepted disagree, STOP and say so.
+- When every step is implemented, the use case's readiness moves on; regenerate the site with
+  **prd-site**.
 
 ## Definition of done
 
