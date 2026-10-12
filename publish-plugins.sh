@@ -22,10 +22,10 @@ echo "== A3 the packs"
 for p in report product-report flow work; do
   oto pack publish --from "$p" --to "$REG" --note "stage 5: the report arc on OTO 0.11"
 done
+oto pack publish --from "$HOME/Downloads/prd-architecture-studio/packs/prd-architecture-studio" --to "$REG" \
+  --note "the studio as a pack: its skills, the pattern-neutral architecture vocabulary and the prd-site view; needs OTO 0.11.6"
 
 echo "== A4 the plugins in their own repositories"
-oto registry plugin prd-architecture-studio --to "$REG" --repo Cynergis/prd-architecture-studio --version 2.1.1 --category product \
-  --description "Atlas, the Lead Product Engineer, and the studio's skills: capture a product's specification and design against OTO packs through the curate gates, build with the brief in hand, publish. Depends on oto."
 oto registry plugin pdf-to-template --to "$REG" --repo Cynergis/pdf-to-template-plugin --version 0.2.0 --category reporting \
   --description "Turn a sample PDF into a data-driven HTML/CSS + Jinja2 template that renders new data to PDF."
 if [ -n "$PIN_ENGINE_BRANCH" ]; then

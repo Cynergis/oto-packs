@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "prd-architecture-studio",
-      "source": "./",
-      "version": "2.1.1",
+      "source": "./packs/prd-architecture-studio",
+      "version": "1.0.0",
       "category": "product",
       "description": "Atlas, the Lead Product Engineer, and the studio's skills: capture a product's specification and design against OTO packs through the curate gates, derive what the product must know, build with the brief in hand, publish. Depends on the oto plugin (marketplace Cynergis/oto-registry)."
     }
