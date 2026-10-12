@@ -14,22 +14,23 @@ longer carries a vocabulary or a graph of its own. It depends on the `oto` plugi
 
 | Skill | What it does |
 |---|---|
-| **atlas** | The one owner of the arc. "Atlas, lead this product." Asks which kind of product and what you have, then runs the scenes, stopping at every gate. Orients with `oto status`; never voices a second persona. |
-| **studio** | The arc end to end, in one go, with Atlas. "Start a product with the studio." |
-| **capture** | The elicitation engine: reads a pack's `capture.json` (the questions by asker, the classes with their fields and links, every field carrying its term), runs the BMAD loop (ask, draft, **[A]** elicit, **[P]** perspectives, **[C]** continue), and on every **C** contributes the section through `oto curate propose`, `add` and `check`, then reports what the graph answers (`oto query questions`). |
+| **atlas** | The one owner of the arc. "Atlas, lead this product." Asks which kind of product and what you have, then runs the scenes, stopping at every gate; "run the studio" runs them all in one go. Orients with `oto status`; never voices a second persona. |
+| **elicit** | The elicitation: runs OTO's **capture-form** on a pack's `capture.json` (the questions by asker, the classes with their fields and links, every field carrying its term) with the BMAD menu at every confirmation (**[A]** elicit, **[P]** perspectives, **[C]** continue); on every **C** the section goes through `oto curate propose`, `add` and `check`, and the graph's answers are reported (`oto query questions`). |
 | **prd-build** | The specification, captured against `product` and the product type's pack (`product-report`, …). |
 | **architecture-build** | The design, captured against `ddd`, which sits on `software-architecture` and `product`. |
-| **feature-flow** | A feature through the gates, read from the graph: the idea against the product's purpose (`kg_ask`), the impact on the design and the flow (`kg_neighbors`, `kg_brief impact-*`), the scenarios, then test-first with `kg_brief write-tests` and `kg_brief implement-step` in hand — BLOCKED by name until the missing fact is captured. |
+| **feature-flow** | A feature through the gates, read from the graph: the idea against the product's purpose (`kg_ask`), the impact on the design and the flow (`kg_neighbors`, `kg_brief impact-*`), the scenarios, then each step test-first through the flow pack's **implement-step** — BLOCKED by name until the missing fact is captured. |
 | **prd-site** | The navigable site as an OTO view (`views/prd-site`): `data.js` is written from the graph by the engine on every build, never by hand. |
 
 What left in version 2: `knowledge-graph` and the mesh ontology (the packs are the ontology; the
 knowledge base is the graph), the built-in section lists of `prd-build` and `architecture-build`
 (the capture schema is the form), and `data.js` as the source of truth (it is a projection).
+In 2.1.0: `studio` folded into `atlas` ("run the studio" still works), `capture` renamed `elicit`
+so it is not mistaken for OTO's `capture`.
 
 ## How it fits with OTO
 
 ```
-pack (ontology + questions)  ──oto ontology capture──►  capture.json  ──capture skill──►  captures/<doc>.json
+pack (ontology + questions)  ──oto ontology capture──►  capture.json  ──elicit skill───►  captures/<doc>.json
                                                                                               │
 graph.json  ◄── oto curate apply ◄── oto curate check ◄── oto curate add ◄── oto curate propose ─┘
     │
@@ -55,7 +56,7 @@ Then: **"Atlas, lead this product."** See `GETTING-STARTED.md`, and `WALKTHROUGH
 ## Tests
 
 `tests/test_scenes.py` runs scenes 1 to 7 scripted on the report application against the OTO
-release the plugin pins (`oto.release` in `.claude-plugin/plugin.json`, 0.11.0; `OTO_HOME` or `oto-kg` installed, and the `product` and `product-report`
+release the plugin pins (`oto.release` in `.claude-plugin/plugin.json`, 0.11.2; `OTO_HOME` or `oto-kg` installed, and the `product` and `product-report`
 packs on the machine, plus `ddd` and `flow`): the project, a capture of the report product's obligations, the gates, the
 questions the graph answers and the ones left open, the design and the flow traced to the specification, and the
 implementing agent's brief: BLOCKED by name, the missing fact captured, READY; the site from the graph, the domain pack on

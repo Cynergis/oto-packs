@@ -24,7 +24,7 @@ for p in report product-report flow work; do
 done
 
 echo "== A4 the plugins in their own repositories"
-oto registry plugin prd-architecture-studio --to "$REG" --repo Cynergis/prd-architecture-studio --version 2.0.0 --category product \
+oto registry plugin prd-architecture-studio --to "$REG" --repo Cynergis/prd-architecture-studio --version 2.1.0 --category product \
   --description "Atlas, the Lead Product Engineer, and the studio's skills: capture a product's specification and design against OTO packs through the curate gates, build with the brief in hand, publish. Depends on oto."
 oto registry plugin pdf-to-template --to "$REG" --repo Cynergis/pdf-to-template-plugin --version 0.2.0 --category reporting \
   --description "Turn a sample PDF into a data-driven HTML/CSS + Jinja2 template that renders new data to PDF."

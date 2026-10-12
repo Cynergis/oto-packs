@@ -16,5 +16,5 @@ bash publish.sh https://github.com/<you>/<repo>.git               # the static s
 ```
 
 What the site shows is what the graph holds: a section the graph cannot fill is empty, and says
-so, until someone captures it (the **capture** skill). `index.html`, `support.js` and `engine.js`
+so, until someone captures it (the **elicit** skill). `index.html`, `support.js` and `engine.js`
 are the renderer and are the same for every product.
