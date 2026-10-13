@@ -258,7 +258,7 @@
         "blocking": "true"
       },
       "links": {
-        "measures": [
+        "measuresMetric": [
           "MET-UNMAPPED"
         ],
         "comparedTo": [
