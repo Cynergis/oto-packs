@@ -19,8 +19,9 @@ oto init --empty --pack prd-architecture-studio --ontology product-report,ddd,fl
 Atlas runs that in scene 1. A pattern is per part, not per product: DDD for an application (the
 `ddd` pack), the medallion pattern for its data pipeline (the `medallion` pack, with
 `report-medallion` when a report reads it), or none. The site's DDD pages are optional
-(`$optional`), so they fill only in a product that adds `ddd`. It needs OTO 0.11.8 or later, which
-finds the ontology of an installed pack by name.
+(`$optional`), so they fill only in a product that adds `ddd`. It needs OTO 0.11.12 or later, which
+finds the ontology of an installed pack by name, declares the plugins the project uses in its
+`.claude/settings.json`, and records the tools in `oto.lock.json` (commit both).
 
 ## The arc
 
