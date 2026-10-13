@@ -16,9 +16,11 @@ the flow merged beside it:
 oto init --empty --pack prd-architecture-studio --ontology product-report,ddd,flow --project <root>
 ```
 
-Atlas runs that in scene 1. A pattern is per part, not per product: DDD for an application, a
-data-pipeline pattern for its data, or none. The site's DDD pages are optional (`$optional`), so
-they fill only in a product that adds `ddd`. It needs OTO 0.11.6 or later.
+Atlas runs that in scene 1. A pattern is per part, not per product: DDD for an application (the
+`ddd` pack), the medallion pattern for its data pipeline (the `medallion` pack, with
+`report-medallion` when a report reads it), or none. The site's DDD pages are optional
+(`$optional`), so they fill only in a product that adds `ddd`. It needs OTO 0.11.8 or later, which
+finds the ontology of an installed pack by name.
 
 ## The arc
 
@@ -31,7 +33,7 @@ they fill only in a product that adds `ddd`. It needs OTO 0.11.6 or later.
 | **atlas** | The one owner of the arc. "Atlas, lead this product." Asks which kind of product and what you have, then runs the scenes, stopping at every gate; "run the studio" runs them all in one go. Orients with `oto status`; never voices a second persona. |
 | **elicit** | The elicitation: runs OTO's **capture-form** on a pack's `capture.json` (the questions by asker, the classes with their fields and links, every field carrying its term) with the BMAD menu at every confirmation (**[A]** elicit, **[P]** perspectives, **[C]** continue); on every **C** the section goes through `oto curate propose`, `add` and `check`, and the graph's answers are reported (`oto query questions`). |
 | **prd-build** | The specification, captured against `product` (in the pack) and the product type merged beside it (`product-report`, …). |
-| **architecture-build** | The design: the architecture against `software-architecture` (in the pack), then each part with the pattern it follows, modelled by the pattern's pack (`ddd:model-domain` for DDD, …). |
+| **architecture-build** | The design: the architecture against `software-architecture` (in the pack), then each part with the pattern it follows, modelled by the pattern's pack (`ddd:model-domain` for DDD, `medallion:design-pipeline` for a data pipeline). |
 | **feature-flow** | A feature through the gates, read from the graph: the idea against the product's purpose (`kg_ask`), the impact on the design and the flow (`kg_neighbors`, `kg_brief impact-*`), the scenarios, then each step test-first through the flow pack's **implement-step** — BLOCKED by name until the missing fact is captured. |
 | **prd-site** | The navigable site, the pack's view `prd-site`, installed in the project when it starts from the pack: `data.js` is written from the graph by the engine on every build, never by hand. |
 
