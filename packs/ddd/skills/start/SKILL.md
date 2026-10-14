@@ -10,6 +10,9 @@ Domain-driven design for the parts of a product that follow it: subdomains, boun
 
 This skill comes with the `ddd` pack. The ontology is inside the pack, so nothing is fetched.
 
+**A design pattern of `software-architecture`**: for a part of a product designed with domain-driven design: its subdomains, bounded contexts, events and aggregates. In a project that composes `software-architecture`, such a part is modelled
+with this pack's **model-domain** skill (`/ddd:model-domain`); `oto status` lists the project's patterns.
+
 1. **Start a project from this pack.**
 
    ```bash
@@ -17,7 +20,7 @@ This skill comes with the `ddd` pack. The ontology is inside the pack, so nothin
    ```
 
    `${CLAUDE_PLUGIN_ROOT}` is this pack's directory; Claude Code fills it in. Outside Claude Code,
-   with the pack on the machine (`oto pack add ddd` from the cynergis registry), `oto init --pack ddd` does the same.
+   with the pack on the machine (`oto pack add ddd`), `oto init --pack ddd` does the same.
    The project records the ontology's origin, so `oto status` says when a newer release exists and
    `oto ontology diff` shows what changed. Add `--ontology <name>,...` to merge other ontologies
    with the pack's (a product type, the flow).
