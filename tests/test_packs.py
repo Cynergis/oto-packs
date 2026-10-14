@@ -93,3 +93,20 @@ def test_atlas_is_the_product_packs_playbook_and_leaves_orientation_to_the_conci
     text = (ROOT / "packs" / "product" / "skills" / "atlas" / "SKILL.md").read_text(encoding="utf-8")
     assert "**Where are we**" not in text and "concierge" in text
     assert "7. **Where are we**" not in text
+
+
+def test_every_pack_skill_talks_in_plain_language():
+    """Technical details are the record's: no skill talks in codes, ids or engine output, and none
+    offers them; the start skills get the same rule from the engine (0.11.22)."""
+    for pack in PACKS:
+        for skill in sorted((ROOT / "packs" / pack / "skills").glob("*/SKILL.md")):
+            text = skill.read_text(encoding="utf-8")
+            assert text.count("## Talking with the person") == 1, skill
+            assert "Never offer them" in text, skill
+            assert "engine's words" not in text and "N of M" not in text, skill
+
+
+def test_atlas_speaks_plainly_again():
+    text = (ROOT / "packs" / "product" / "skills" / "atlas" / "SKILL.md").read_text(encoding="utf-8")
+    assert "Holding here" in text and "— Atlas" in text and "(scene 1)" not in text
+    assert "**Start a new product**" in text and "**Describe what it must do**" in text
