@@ -21,6 +21,6 @@ jobs:
         with:
           python-version: "3.11"
       - name: The engine, at its release
-        run: python -m pip install --upgrade pip && python -m pip install "oto-kg @ git+https://github.com/Cynergis/oto@v0.11.17" pytest
+        run: python -m pip install --upgrade pip && python -m pip install "oto-kg @ git+https://github.com/Cynergis/oto@v0.11.20" pytest
       - name: Packs
         run: python -m pytest -q tests/test_packs.py
