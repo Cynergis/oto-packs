@@ -1,0 +1,17 @@
+{
+  "name": "agent",
+  "displayName": "Agent (OTO pack)",
+  "description": "The agent pattern for the parts of a product that people give work to through an agent rather than a screen: the jobs they hand it, its tools and what each changes, what it reads, its guardrails and who confirms, how it talks, its hand-offs and the test conversations that prove each job, traced to the requirements and components of the architecture.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Cynergis"
+  },
+  "dependencies": [
+    "oto"
+  ],
+  "keywords": [
+    "software",
+    "oto",
+    "knowledge-graph"
+  ]
+}

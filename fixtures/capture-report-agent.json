@@ -1,0 +1,325 @@
+{
+ "doc": "report-product-agent",
+ "as_of": "2026-10-14",
+ "scope": "fund-report",
+ "items": [
+  {
+   "type": "Component",
+   "id": "CMP-PLUGIN",
+   "label": "Template plugin",
+   "summary": "The plugin that carries the report template assistant.",
+   "links": {
+    "part_of": [
+     "system.fund-report.sys"
+    ],
+    "runs_in": [
+     "environment.fund-report.env-prod"
+    ]
+   },
+   "where": "§4",
+   "quote": "Template plugin"
+  },
+  {
+   "type": "Agent",
+   "id": "AG-TPL",
+   "label": "Report template assistant",
+   "summary": "The agent an analyst gives a sample PDF to, instead of writing a template by hand.",
+   "fields": {
+    "packaging": "plugin",
+    "distribution": "the organisation's plugin marketplace",
+    "readiness": "draft"
+   },
+   "links": {
+    "works_for": [
+     "persona.fund-report.p1"
+    ],
+    "deployed_as": [
+     "CMP-PLUGIN"
+    ],
+    "owned_by": [
+     "team.fund-report.team-reports"
+    ],
+    "speaks_in": [
+     "STYLE"
+    ],
+    "equipped_with": [
+     "TOOL-INSPECT",
+     "TOOL-RENDER",
+     "TOOL-RECORD",
+     "TOOL-INSTALL"
+    ]
+   },
+   "where": "§4",
+   "quote": "Report template assistant"
+  },
+  {
+   "type": "ConversationStyle",
+   "id": "STYLE",
+   "label": "Plain language",
+   "summary": "How the assistant talks with an analyst.",
+   "fields": {
+    "voice": "Plain and brief, in the analyst's words.",
+    "shape": "Say what is next, ask a few questions at a time, read back, confirm, say what is next.",
+    "technical_details": "on_request"
+   },
+   "where": "§4",
+   "quote": "Plain language"
+  },
+  {
+   "type": "Job",
+   "id": "JOB-TEMPLATE",
+   "label": "Build a report's template from its sample PDF",
+   "summary": "Turns a sample PDF into a template that renders new data like it, checked against the sample.",
+   "fields": {
+    "when_to_use": "The analyst has a sample PDF of a report whose definition is recorded and wants it rendered from new data.",
+    "produces": "A template that renders the report from new data, checked against the sample.",
+    "autonomy": "acts_after_confirmation",
+    "readiness": "ready"
+   },
+   "links": {
+    "part_of": [
+     "AG-TPL"
+    ],
+    "requested_by": [
+     "persona.fund-report.p1"
+    ],
+    "satisfies": [
+     "requirement.fund-report.fr1"
+    ],
+    "calls": [
+     "TOOL-INSPECT",
+     "TOOL-RENDER",
+     "TOOL-RECORD"
+    ],
+    "draws_on": [
+     "KS-DEF",
+     "KS-SAMPLE"
+    ]
+   },
+   "where": "§4",
+   "quote": "Build a report's template from its sample PDF"
+  },
+  {
+   "type": "Job",
+   "id": "JOB-SETUP",
+   "label": "Set up the tools",
+   "summary": "Checks that the tools run on this machine and fixes what it can.",
+   "fields": {
+    "when_to_use": "A script fails to start, or the analyst asks whether everything is installed.",
+    "produces": "Tools that run, and a plain list of what was fixed.",
+    "autonomy": "acts_alone",
+    "readiness": "draft"
+   },
+   "links": {
+    "part_of": [
+     "AG-TPL"
+    ],
+    "requested_by": [
+     "persona.fund-report.p1"
+    ],
+    "calls": [
+     "TOOL-INSTALL"
+    ],
+    "hands_off_to": [
+     "JOB-TEMPLATE"
+    ]
+   },
+   "where": "§4",
+   "quote": "Set up the tools"
+  },
+  {
+   "type": "Tool",
+   "id": "TOOL-INSPECT",
+   "label": "Inspect the sample PDF",
+   "summary": "Reads the sample's pages, text and fonts.",
+   "fields": {
+    "effect": "reads",
+    "reversible": true
+   },
+   "where": "§4",
+   "quote": "Inspect the sample PDF"
+  },
+  {
+   "type": "Tool",
+   "id": "TOOL-RENDER",
+   "label": "Render a document",
+   "summary": "Renders the template with new data to PDF in the project.",
+   "fields": {
+    "effect": "changes",
+    "reversible": true
+   },
+   "where": "§4",
+   "quote": "Render a document"
+  },
+  {
+   "type": "Tool",
+   "id": "TOOL-RECORD",
+   "label": "Record the build",
+   "summary": "Records the sample, the build and the release in the knowledge base.",
+   "fields": {
+    "effect": "changes",
+    "reversible": false
+   },
+   "links": {
+    "reaches": [
+     "system.fund-report.sys"
+    ]
+   },
+   "where": "§4",
+   "quote": "Record the build"
+  },
+  {
+   "type": "Tool",
+   "id": "TOOL-INSTALL",
+   "label": "Install what the tools need",
+   "summary": "Installs the packages and the browser the scripts need.",
+   "fields": {
+    "effect": "changes",
+    "reversible": true
+   },
+   "where": "§4",
+   "quote": "Install what the tools need"
+  },
+  {
+   "type": "KnowledgeSource",
+   "id": "KS-DEF",
+   "label": "The report's definition",
+   "summary": "The sections, fields and meanings the report has, as accepted.",
+   "fields": {
+    "kind": "knowledge_base",
+    "freshness": "The last accepted revision."
+   },
+   "links": {
+    "held_in": [
+     "system.fund-report.sys"
+    ]
+   },
+   "where": "§4",
+   "quote": "The report's definition"
+  },
+  {
+   "type": "KnowledgeSource",
+   "id": "KS-SAMPLE",
+   "label": "The sample PDF",
+   "summary": "A published document of the report.",
+   "fields": {
+    "kind": "documents",
+    "freshness": "The latest published document."
+   },
+   "where": "§4",
+   "quote": "The sample PDF"
+  },
+  {
+   "type": "Guardrail",
+   "id": "GR-CONFIRM",
+   "label": "Confirm before recording a build",
+   "summary": "Nothing is recorded without the analyst's yes.",
+   "fields": {
+    "kind": "confirm_first",
+    "rule": "Read back what the build produced and record it only when the analyst confirms."
+   },
+   "links": {
+    "protects": [
+     "TOOL-RECORD"
+    ],
+    "confirmed_by": [
+     "role.fund-report.role-analyst"
+    ]
+   },
+   "where": "§4",
+   "quote": "Confirm before recording a build"
+  },
+  {
+   "type": "Guardrail",
+   "id": "GR-NO-INVENT",
+   "label": "Never invent a field",
+   "summary": "The template shows what the definition has, nothing more.",
+   "fields": {
+    "kind": "never",
+    "rule": "Never add a field the report's definition does not have."
+   },
+   "links": {
+    "protects": [
+     "AG-TPL"
+    ]
+   },
+   "where": "§4",
+   "quote": "Never invent a field"
+  },
+  {
+   "type": "Guardrail",
+   "id": "GR-DISCLAIMER",
+   "label": "Never drop the disclaimer",
+   "summary": "The disclaimer is carried as signed off.",
+   "fields": {
+    "kind": "never",
+    "rule": "Never drop or reword the regulatory disclaimer."
+   },
+   "links": {
+    "protects": [
+     "AG-TPL"
+    ],
+    "upholds": [
+     "policy.fund-report.pol1"
+    ]
+   },
+   "where": "§4",
+   "quote": "Never drop the disclaimer"
+  },
+  {
+   "type": "Guardrail",
+   "id": "GR-INSTALL",
+   "label": "Install only what the tools need",
+   "summary": "Setting up stays within the tools' own needs.",
+   "fields": {
+    "kind": "limit",
+    "rule": "Install only the packages and browser the scripts declare, nothing else."
+   },
+   "links": {
+    "protects": [
+     "TOOL-INSTALL"
+    ]
+   },
+   "where": "§4",
+   "quote": "Install only what the tools need"
+  },
+  {
+   "type": "Evaluation",
+   "id": "EV-EXAMPLE",
+   "label": "The worked example",
+   "summary": "The plugin's own example, built from its sample.",
+   "fields": {
+    "request": "Build the template from the example fact sheet.",
+    "expected": "Renders the example from new data and matches the sample within the threshold.",
+    "must_not": "Ask for YAML files, or add a field the definition does not have.",
+    "result": "pass"
+   },
+   "links": {
+    "proves": [
+     "JOB-TEMPLATE"
+    ]
+   },
+   "where": "§4",
+   "quote": "The worked example"
+  },
+  {
+   "type": "Evaluation",
+   "id": "EV-SETUP",
+   "label": "A missing browser",
+   "summary": "Setting up on a machine without the browser.",
+   "fields": {
+    "request": "Is everything installed?",
+    "expected": "Installs the browser, then says in plain words what it fixed.",
+    "must_not": "Paste the installer's output.",
+    "result": "not_run"
+   },
+   "links": {
+    "proves": [
+     "JOB-SETUP"
+    ]
+   },
+   "where": "§4",
+   "quote": "A missing browser"
+  }
+ ]
+}
