@@ -59,3 +59,7 @@ with this pack's **model-domain** skill (`/ddd:model-domain`); `oto status` list
 - **ValueObject**: A thing defined only by its values, immutable, carrying typed fields.
 - **BusinessRule**: An invariant, precondition, postcondition or constraint the domain enforces, cited by the aggregates, commands and use cases it binds. Distinct from the product's Policy, a rule imposed from outside; a policy may require a business rule.
 - **DomainService**: Domain logic that belongs to no single aggregate, stateless, operating on aggregates and values.
+
+## The views it ships
+
+- `domain-model`: `oto serve --http <port> --view domain-model`, or `oto build --target site --view domain-model`
