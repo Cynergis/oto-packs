@@ -24,7 +24,7 @@ if (OTO / "oto" / "__init__.py").exists() and str(OTO) not in sys.path:
 try:
     import oto  # noqa: F401
     from oto.model import ontologies
-    HAVE = all(ontologies.dir_for(name) is not None for name in ("product", "product-report", "ddd", "flow"))
+    HAVE = all(ontologies.dir_for(name) is not None for name in ("product", "product-report", "ddd", "agent", "flow"))
 except ImportError:
     HAVE = False
 pytestmark = pytest.mark.skipif(not HAVE, reason="OTO and the product, product-report packs are needed")
@@ -33,6 +33,7 @@ CAPTURE = ROOT / "fixtures" / "capture-report-product-spec.json"
 DESIGN = ROOT / "fixtures" / "capture-report-design.json"
 FLOW = ROOT / "fixtures" / "capture-report-flow.json"
 FLOW_FIELDS = ROOT / "fixtures" / "capture-report-flow-fields.json"
+AGENT = ROOT / "fixtures" / "capture-report-agent.json"
 
 
 def _captured(root, *captures):
@@ -154,6 +155,44 @@ def test_scene_4_the_design_is_captured_against_ddd_and_traced_to_the_specificat
         assert code == 0 and "Keep every accepted revision" in out and "Report analyst" in out, out
         code, out = oto_cli("query", "--project", root, "entity", "boundedcontext.fund-report.bc-def")
         assert code == 0 and "deployed as → Definition service" in out, out
+
+
+def test_scene_4_an_agent_part_is_captured_against_agent_and_traced_to_the_specification():
+    """The third pattern on a real plugin: pdf-to-template, the report product's agent."""
+    with tempfile.TemporaryDirectory() as root:
+        assert oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--ontology", "product-report,ddd,agent", "--empty", "--project", root)[0] == 0
+        assert oto_cli("curate", "start", "--project", root)[0] == 0
+        _captured(root, CAPTURE, DESIGN, AGENT)
+        code, out = oto_cli("query", "--project", root, "questions")
+        assert code == 0, out
+        for qid in ("AG1", "AG2", "AG4", "AG9", "DD1"):
+            line = next(l for l in out.splitlines() if l.startswith(qid + " "))
+            assert "answered" in line, line
+        line = next(l for l in out.splitlines() if l.startswith("AG12 "))
+        assert "clean" in line, line
+        code, out = oto_cli("query", "--project", root, "ask", "AG3", "JOB=job.fund-report.job-template")
+        assert code == 0 and "Produce the fund profile monthly" in out and "acts_after_confirmation" in out, out
+        code, out = oto_cli("query", "--project", root, "ask", "AG11", "AGENT=agent.fund-report.ag-tpl")
+        assert code == 0 and "Template plugin" in out and "Fund report platform" in out, "the agent reaches what its tools reach: " + out
+
+
+def test_scene_4_the_gates_refuse_an_agent_that_acts_alone_where_a_person_must_confirm():
+    with tempfile.TemporaryDirectory() as root:
+        assert oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--ontology", "product-report,ddd,agent", "--empty", "--project", root)[0] == 0
+        assert oto_cli("curate", "start", "--project", root)[0] == 0
+        agent = json.load(open(AGENT, encoding="utf-8"))
+        setup = next(i for i in agent["items"] if i["id"] == "JOB-SETUP")
+        setup["links"]["calls"].append("TOOL-RECORD")
+        contradicted = os.path.join(root, "agent-contradicted.json")
+        json.dump(agent, open(contradicted, "w", encoding="utf-8"))
+        for capture in (str(CAPTURE), str(DESIGN), contradicted):
+            code, out = oto_cli("curate", "propose", "--project", root, "--from", capture)
+            assert code == 0, out
+            doc = json.load(open(capture, encoding="utf-8"))["doc"]
+            assert oto_cli("curate", "add", "--project", root, "--from", os.path.join(root, "proposals", doc + ".json"))[0] == 0
+        code, out = oto_cli("curate", "check", "--project", root)
+        assert code != 0 and "ready to apply" not in out, out
+        assert "acts alone with a tool that needs a person's confirmation" in out, out
 
 
 def test_scene_4_the_flow_is_captured_against_flow_and_scene_5_the_agent_is_blocked_by_name_then_ready():

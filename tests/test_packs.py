@@ -42,7 +42,7 @@ def _same(a, b):
 
 
 def test_there_are_packs():
-    assert {"product", "software-architecture", "ddd", "work"} <= set(PACKS)
+    assert {"product", "software-architecture", "ddd", "agent", "work"} <= set(PACKS)
     assert "prd-architecture-studio" not in PACKS, "the studio is the project's assembled site, not a pack"
 
 
