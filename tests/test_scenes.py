@@ -251,7 +251,7 @@ def test_scene_6_the_site_is_a_view_of_the_graph_and_scene_7_readers_install_a_p
 def test_atlas_starts_a_product_from_the_product_pack_with_its_type_its_architecture_its_pattern_and_the_flow():
     # the pack: Atlas and the specification's skills, the product vocabulary and the site view, validated together
     code, out = oto_cli("pack", "check", str(PACK))
-    assert code == 0 and "check clean" in out and "5 skill(s), 1 view(s)" in out, out
+    assert code == 0 and "check clean" in out and "4 skill(s), 1 view(s)" in out, out
     with tempfile.TemporaryDirectory() as root:
         # scene 1, as Atlas runs it: the pack, with the product type, the architecture, DDD for its application and the flow
         code, out = oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--pack", str(PACK),

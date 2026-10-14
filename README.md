@@ -80,7 +80,6 @@ only in a product that composes `software-architecture`; its DDD pages only with
 | Skill | What it does |
 |---|---|
 | **atlas** | The one owner of the arc. "Atlas, lead this product." Asks which kind of product and what you have, then runs the scenes, stopping at every gate; "run the studio" runs them all in one go. Orients with `oto status`; never voices a second persona. |
-| **elicit** | The elicitation: runs OTO's **capture-form** on a pack's `capture.json` (the questions by asker, the classes with their fields and links, every field carrying its term) with the BMAD menu at every confirmation (**[A]** elicit, **[P]** perspectives, **[C]** continue); on every **C** the section goes through `oto curate propose`, `add` and `check`, and the graph's answers are reported (`oto query questions`). |
 | **prd-build** | The specification, captured against `product` (in the pack) and the product type merged beside it (`product-report`, …). |
 | **architecture-build** | In the `software-architecture` pack. The design: the architecture, pattern-neutral, then each part handed to the pattern pack it follows, found in `oto status --json` (each pack's `pattern`), never named. |
 | **feature-flow** | In the `work` pack. A feature through the gates, read from the graph: the idea against the product's purpose (`kg_ask`), the impact on the design and the flow (`kg_neighbors`, `kg_brief impact-*`), the scenarios, then each step test-first through the flow pack's **implement-step** — BLOCKED by name until the missing fact is captured. |
@@ -99,7 +98,7 @@ uninstalled and the pack installed, not updated. On 2026-10-14 the studio pack (
 ### How it fits with OTO
 
 ```
-pack (ontology + questions)  ──oto ontology capture──►  capture.json  ──elicit skill───►  captures/<doc>.json
+pack (ontology + questions)  ──oto ontology capture──►  capture.json  ─capture-form───►  captures/<doc>.json
                                                                                               │
 graph.json  ◄── oto curate apply ◄── oto curate check ◄── oto curate add ◄── oto curate propose ─┘
     │

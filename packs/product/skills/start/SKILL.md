@@ -25,7 +25,6 @@ This skill comes with the `product` pack. The ontology is inside the pack, so no
 2. **Go on with this pack's skills**, written for this domain:
 
    - **product:atlas**: Atlas, the Lead Product Engineer.
-   - **product:elicit**: The studio's elicitation.
    - **product:prd-build**: Build a product's specification (the PRD) as a knowledge base.
    - **product:prd-site**: Serve or publish the navigable PRD + Architecture site as a view of the knowledge base.
 

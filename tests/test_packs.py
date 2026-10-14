@@ -75,3 +75,13 @@ def test_the_architecture_skill_finds_patterns_and_never_names_them():
         manifest = json.load(open(ROOT / "packs" / pack / "manifest.json", encoding="utf-8"))
         if manifest.get("pattern"):
             assert manifest["pattern"]["of"] == "software-architecture", pack
+
+
+def test_no_pack_keeps_an_elicit_skill_or_names_the_studio():
+    """The confirmation menu is capture-form's own (engine 0.11.20), and the studio is no plugin any more."""
+    for pack in PACKS:
+        assert not (ROOT / "packs" / pack / "skills" / "elicit").exists(), pack
+        for skill in (ROOT / "packs" / pack / "skills").glob("*/SKILL.md"):
+            text = skill.read_text(encoding="utf-8")
+            assert "**elicit**" not in text and "elicit skill" not in text, skill
+            assert "a studio's" not in text and "--pack <studio>" not in text, skill
