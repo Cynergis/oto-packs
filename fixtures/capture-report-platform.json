@@ -1,0 +1,377 @@
+{
+ "doc": "report-product-platform",
+ "as_of": "2026-10-14",
+ "scope": "fund-report",
+ "items": [
+  {
+   "type": "Platform",
+   "id": "PLT-GCP",
+   "label": "Google Cloud",
+   "summary": "Where the fund report platform runs.",
+   "fields": {
+    "provider": "gcp"
+   },
+   "where": "§6",
+   "quote": "Google Cloud"
+  },
+  {
+   "type": "Account",
+   "id": "ACC-PROD",
+   "label": "Fund reports production project",
+   "summary": "The GCP project production lives in.",
+   "fields": {
+    "account_kind": "gcp_project",
+    "identifier": "example-fund-reports-prod"
+   },
+   "links": {
+    "on_platform": [
+     "PLT-GCP"
+    ]
+   },
+   "where": "§6",
+   "quote": "Fund reports production project"
+  },
+  {
+   "type": "Repository",
+   "id": "REPO-INFRA",
+   "label": "example/fund-reports-infra",
+   "summary": "The infrastructure code that creates the environments.",
+   "fields": {
+    "owner": "example",
+    "name": "fund-reports-infra",
+    "url": "https://github.com/example/fund-reports-infra",
+    "default_branch": "main"
+   },
+   "where": "§6",
+   "quote": "example/fund-reports-infra"
+  },
+  {
+   "type": "Environment",
+   "id": "ENV-PROD",
+   "label": "Production",
+   "summary": "Where the monthly batch runs.",
+   "where": "§1",
+   "quote": "Production",
+   "fields": {
+    "purpose": "production",
+    "region": "northamerica-northeast1",
+    "console_url": "https://console.cloud.google.com/home/dashboard?project=example-fund-reports-prod",
+    "logs_url": "https://console.cloud.google.com/logs/query?project=example-fund-reports-prod"
+   },
+   "links": {
+    "hosted_in": [
+     "ACC-PROD"
+    ],
+    "provisioned_by": [
+     "REPO-INFRA"
+    ]
+   }
+  },
+  {
+   "type": "PlatformService",
+   "id": "SVC-RUN",
+   "label": "Cloud Run",
+   "summary": "Runs the services and the monthly render job as containers.",
+   "fields": {
+    "service_kind": "compute"
+   },
+   "links": {
+    "on_platform": [
+     "PLT-GCP"
+    ]
+   },
+   "where": "§6",
+   "quote": "Cloud Run"
+  },
+  {
+   "type": "PlatformService",
+   "id": "SVC-SECRETS",
+   "label": "Secret Manager",
+   "summary": "Where the platform's secrets are kept.",
+   "fields": {
+    "service_kind": "secrets"
+   },
+   "links": {
+    "on_platform": [
+     "PLT-GCP"
+    ]
+   },
+   "where": "§6",
+   "quote": "Secret Manager"
+  },
+  {
+   "type": "Technology",
+   "id": "TECH-PY",
+   "label": "Python",
+   "summary": "The language of every component.",
+   "fields": {
+    "technology_kind": "language",
+    "version": "3.12"
+   },
+   "where": "§6",
+   "quote": "Python"
+  },
+  {
+   "type": "Technology",
+   "id": "TECH-FASTAPI",
+   "label": "FastAPI",
+   "summary": "The definition service's web framework.",
+   "fields": {
+    "technology_kind": "framework",
+    "version": "0.115"
+   },
+   "where": "§6",
+   "quote": "FastAPI"
+  },
+  {
+   "type": "Technology",
+   "id": "TECH-JINJA",
+   "label": "Jinja2",
+   "summary": "The render job's template library, the builder's pick.",
+   "fields": {
+    "technology_kind": "library",
+    "version": "3.1"
+   },
+   "where": "§6",
+   "quote": "Jinja2"
+  },
+  {
+   "type": "SecretRef",
+   "id": "SEC-TABLE",
+   "label": "Report table credentials",
+   "summary": "What the render job reads the report's table with.",
+   "fields": {
+    "reference": "report-table-reader"
+   },
+   "links": {
+    "kept_in": [
+     "SVC-SECRETS"
+    ]
+   },
+   "where": "§6",
+   "quote": "Report table credentials"
+  },
+  {
+   "type": "Component",
+   "id": "CMP-DEF",
+   "label": "Definition service",
+   "summary": "Holds every accepted revision of a report type's definition.",
+   "where": "§3",
+   "quote": "Definition service",
+   "links": {
+    "runs_on": [
+     "SVC-RUN"
+    ],
+    "built_with": [
+     "TECH-PY",
+     "TECH-FASTAPI"
+    ]
+   }
+  },
+  {
+   "type": "Component",
+   "id": "CMP-RENDER",
+   "label": "Render job",
+   "summary": "Produces the monthly documents from finished columns.",
+   "where": "§3",
+   "quote": "Render job",
+   "links": {
+    "runs_on": [
+     "SVC-RUN"
+    ],
+    "built_with": [
+     "TECH-PY",
+     "TECH-JINJA"
+    ],
+    "needs_secret": [
+     "SEC-TABLE"
+    ]
+   }
+  },
+  {
+   "type": "Component",
+   "id": "CMP-GATE",
+   "label": "Release gate",
+   "summary": "Refuses a production release while a field is unmapped.",
+   "where": "§3",
+   "quote": "Release gate",
+   "links": {
+    "runs_on": [
+     "SVC-RUN"
+    ],
+    "built_with": [
+     "TECH-PY"
+    ]
+   }
+  },
+  {
+   "type": "Pipeline",
+   "id": "PIPE-APP",
+   "label": "Fund reports pipeline",
+   "summary": "Builds, tests and deploys the platform's components on every merge.",
+   "fields": {
+    "url": "https://github.com/example/fund-reports/actions"
+   },
+   "links": {
+    "deploys": [
+     "CMP-DEF",
+     "CMP-RENDER",
+     "CMP-GATE"
+    ],
+    "deploys_to": [
+     "ENV-PROD"
+    ]
+   },
+   "where": "§6",
+   "quote": "Fund reports pipeline"
+  },
+  {
+   "type": "Role",
+   "id": "ROLE-ARCH",
+   "label": "Lead architect",
+   "summary": "Decides the platform and confirms the builder's picks.",
+   "where": "§6",
+   "quote": "Lead architect"
+  },
+  {
+   "type": "Choice",
+   "id": "CH-CLOUD",
+   "label": "Which cloud",
+   "summary": "The platform the fund report platform runs on.",
+   "fields": {
+    "category": "platform",
+    "authority": "decided"
+   },
+   "links": {
+    "shapes": [
+     "system.fund-report.sys"
+    ],
+    "settled_by": [
+     "DEC-CLOUD"
+    ]
+   },
+   "where": "§6",
+   "quote": "Which cloud"
+  },
+  {
+   "type": "Decision",
+   "id": "DEC-CLOUD",
+   "label": "Run on Google Cloud",
+   "summary": "The fund report platform runs on Google Cloud.",
+   "fields": {
+    "status": "accepted",
+    "option": "Google Cloud",
+    "alternatives": [
+     "AWS",
+     "Azure"
+    ],
+    "consequences": "The managed services are Google's; leaving them would be a migration.",
+    "rationale": "The report table already lives in the organisation's Google Cloud data platform.",
+    "decided_on": "2026-10-01"
+   },
+   "links": {
+    "decided_by": [
+     "ROLE-ARCH"
+    ]
+   },
+   "where": "§6",
+   "quote": "Run on Google Cloud"
+  },
+  {
+   "type": "Choice",
+   "id": "CH-REGION",
+   "label": "Which region",
+   "summary": "Where production runs.",
+   "fields": {
+    "category": "region",
+    "authority": "decided"
+   },
+   "links": {
+    "shapes": [
+     "ENV-PROD"
+    ],
+    "settled_by": [
+     "DEC-REGION"
+    ],
+    "bounded_by": [
+     "DEC-CLOUD"
+    ]
+   },
+   "where": "§6",
+   "quote": "Which region"
+  },
+  {
+   "type": "Decision",
+   "id": "DEC-REGION",
+   "label": "Run in northamerica-northeast1",
+   "summary": "Production runs in Montréal.",
+   "fields": {
+    "status": "accepted",
+    "option": "northamerica-northeast1",
+    "alternatives": [
+     "northamerica-northeast2"
+    ],
+    "consequences": "The documents and the report table stay in Canada.",
+    "rationale": "Client documents must stay in Canada.",
+    "decided_on": "2026-10-01"
+   },
+   "links": {
+    "decided_by": [
+     "ROLE-ARCH"
+    ]
+   },
+   "where": "§6",
+   "quote": "Run in northamerica-northeast1"
+  },
+  {
+   "type": "Choice",
+   "id": "CH-TEMPLATES",
+   "label": "The render job's template library",
+   "summary": "Left to the builder, within the libraries the platform team supports.",
+   "fields": {
+    "category": "technology",
+    "authority": "delegated",
+    "allowed": [
+     "Jinja2",
+     "Mako"
+    ]
+   },
+   "links": {
+    "shapes": [
+     "CMP-RENDER"
+    ],
+    "settled_by": [
+     "DEC-TEMPLATES"
+    ],
+    "bounded_by": [
+     "DEC-CLOUD"
+    ]
+   },
+   "where": "§6",
+   "quote": "The render job's template library"
+  },
+  {
+   "type": "Decision",
+   "id": "DEC-TEMPLATES",
+   "label": "Render the templates with Jinja2",
+   "summary": "The builder's pick, confirmed by the lead architect.",
+   "fields": {
+    "status": "accepted",
+    "option": "Jinja2",
+    "alternatives": [
+     "Mako"
+    ],
+    "consequences": "The templates the pdf-to-template plugin writes are used as they are.",
+    "rationale": "The template plugin already writes Jinja2; the builder proposed it.",
+    "decided_on": "2026-10-08"
+   },
+   "links": {
+    "decided_by": [
+     "ROLE-ARCH"
+    ]
+   },
+   "where": "§6",
+   "quote": "Render the templates with Jinja2"
+  }
+ ]
+}

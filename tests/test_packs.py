@@ -42,7 +42,7 @@ def _same(a, b):
 
 
 def test_there_are_packs():
-    assert {"product", "software-architecture", "ddd", "agent", "work"} <= set(PACKS)
+    assert {"product", "software-architecture", "ddd", "agent", "platform", "work"} <= set(PACKS)
     assert "prd-architecture-studio" not in PACKS, "the studio is the project's assembled site, not a pack"
 
 
@@ -110,3 +110,18 @@ def test_atlas_speaks_plainly_again():
     text = (ROOT / "packs" / "product" / "skills" / "atlas" / "SKILL.md").read_text(encoding="utf-8")
     assert "Holding here" in text and "— Atlas" in text and "(scene 1)" not in text
     assert "**Start a new product**" in text and "**Describe what it must do**" in text
+
+
+def test_the_architecture_finds_the_binding_and_the_build_asks_its_briefs():
+    """Where the product runs is a binding: found in `oto status` like the patterns, never named; and
+    the build stops on its briefs before implementing, deploying or testing end to end."""
+    text = (ROOT / "packs" / "software-architecture" / "skills" / "architecture-build" / "SKILL.md").read_text(encoding="utf-8")
+    assert "## 4. Where it runs" in text and "`binding`" in text and "oto pack list --bindings" in text
+    assert "bind-platform" not in text, "a binding should be found, not named"
+    bindings = [p for p in PACKS if json.load(open(ROOT / "packs" / p / "manifest.json", encoding="utf-8")).get("binding")]
+    assert bindings == ["platform"]
+    flow = (ROOT / "packs" / "work" / "skills" / "feature-flow" / "SKILL.md").read_text(encoding="utf-8")
+    for task in ("implement-component", "deploy-component", "test-end-to-end"):
+        assert task in flow, task
+    skill = (ROOT / "packs" / "platform" / "skills" / "bind-platform" / "SKILL.md").read_text(encoding="utf-8")
+    assert "Never record a secret's value." in skill and "never mark it accepted on your own" in skill
