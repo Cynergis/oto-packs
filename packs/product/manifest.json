@@ -6,7 +6,7 @@
     "for": "a product, from an idea to a published knowledge base: its specification, its design, its build and its readers",
     "skill": "atlas"
   },
-  "summary": "A product's specification and its playbook: Atlas, who carries a product from an idea to a published knowledge base, the PRD captured section by section through the curate gates, and the PRD and architecture site read from the graph.",
+  "summary": "A product's specification and its playbook: Atlas, who carries a product from an idea to a published knowledge base, the PRD captured section by section through the curate gates, and the specification page of the product's studio, read from the graph.",
   "ontology": {
     "name": "product",
     "release": 9,
@@ -17,7 +17,7 @@
     "commit": null,
     "embedded_at": "2026-10-14"
   },
-  "engine": ">=0.11.22",
+  "engine": ">=0.11.25",
   "maintainer": "Cynergis",
   "changelog": [
     {

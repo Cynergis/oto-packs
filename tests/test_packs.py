@@ -125,3 +125,31 @@ def test_the_architecture_finds_the_binding_and_the_build_asks_its_briefs():
         assert task in flow, task
     skill = (ROOT / "packs" / "platform" / "skills" / "bind-platform" / "SKILL.md").read_text(encoding="utf-8")
     assert "Never record a secret's value." in skill and "never mark it accepted on your own" in skill
+
+
+def test_the_product_brings_its_specification_page_to_the_studio_and_the_old_site_is_gone():
+    view = ROOT / "packs" / "product" / "views" / "specification"
+    app = json.load(open(view / "app.json", encoding="utf-8"))
+    assert app["place"] == "product" and app["title"] == "The specification" and "Requirement" in app["shows"]
+    assert not (ROOT / "packs" / "product" / "views" / "prd-site").exists()
+    assert not (ROOT / "packs" / "product" / "skills" / "prd-site").exists()
+    page = (view / "index.html").read_text(encoding="utf-8") + (view / "app.js").read_text(encoding="utf-8")
+    assert "../_studio/studio.js" in page and "studio-open" in page
+    for gone in ("BMAD", "Section coverage", "mermaid"):
+        assert gone not in page, gone
+    for pack in PACKS:
+        for path in (ROOT / "packs" / pack).rglob("*.md"):
+            if "/ontology/" not in str(path):
+                assert "prd-site" not in path.read_text(encoding="utf-8"), path
+
+
+def test_the_design_and_where_it_runs_pages_join_the_studio():
+    for pack, name, place, shows in (("software-architecture", "architecture", "design", "Component"),
+                                     ("platform", "where-it-runs", "runs", "Environment")):
+        view = ROOT / "packs" / pack / "views" / name
+        app = json.load(open(view / "app.json", encoding="utf-8"))
+        assert app["place"] == place and shows in app["shows"] and app["open"], name
+        page = (view / "index.html").read_text(encoding="utf-8") + (view / "app.js").read_text(encoding="utf-8")
+        assert "../_studio/studio.js" in page and "studio-open" in page, name
+        for gone in ("BMAD", "component.", "environment.", "attr."):
+            assert gone not in page, (name, gone)
