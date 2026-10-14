@@ -125,3 +125,19 @@ def test_the_architecture_finds_the_binding_and_the_build_asks_its_briefs():
         assert task in flow, task
     skill = (ROOT / "packs" / "platform" / "skills" / "bind-platform" / "SKILL.md").read_text(encoding="utf-8")
     assert "Never record a secret's value." in skill and "never mark it accepted on your own" in skill
+
+
+def test_the_product_brings_its_specification_page_to_the_studio_and_the_old_site_is_gone():
+    view = ROOT / "packs" / "product" / "views" / "specification"
+    app = json.load(open(view / "app.json", encoding="utf-8"))
+    assert app["place"] == "product" and app["title"] == "The specification" and "Requirement" in app["shows"]
+    assert not (ROOT / "packs" / "product" / "views" / "prd-site").exists()
+    assert not (ROOT / "packs" / "product" / "skills" / "prd-site").exists()
+    page = (view / "index.html").read_text(encoding="utf-8") + (view / "app.js").read_text(encoding="utf-8")
+    assert "../_studio/studio.js" in page and "studio-open" in page
+    for gone in ("BMAD", "Section coverage", "mermaid"):
+        assert gone not in page, gone
+    for pack in PACKS:
+        for path in (ROOT / "packs" / pack).rglob("*.md"):
+            if "/ontology/" not in str(path):
+                assert "prd-site" not in path.read_text(encoding="utf-8"), path

@@ -53,7 +53,7 @@ def _captured(root, *captures):
 
 
 PACK = ROOT / "packs" / "product"
-VIEW = PACK / "views" / "prd-site"
+VIEW = PACK / "views" / "specification"
 
 
 def oto_cli(*args, cwd=None, env=None):
@@ -276,36 +276,43 @@ def test_scene_4_the_flow_is_captured_against_flow_and_scene_5_the_agent_is_bloc
         assert code == 0 and "->  READY" in out and "[1 fact(s)]" in out, "the check compared to it: " + out
 
 
-def _globals(site):
-    """data.js, read as the browser would: the two globals."""
+def _spec(site):
+    """The specification page's data.js, read as the browser would."""
     r = subprocess.run(["node", "-e", "const fs=require('fs'),vm=require('vm');const w={};"
                         "vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8'),{window:w});"
-                        "console.log(JSON.stringify({PRD:w.__PRD__,ARCH:w.__ARCH__}))", os.path.join(site, "data.js")],
+                        "console.log(JSON.stringify(w.__SPEC__))", os.path.join(site, "data.js")],
                        capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
     return json.loads(r.stdout)
 
 
+def _plain(site):
+    """What a reader sees has no method jargon and no raw ids: the page and its script."""
+    text = open(os.path.join(site, "index.html"), encoding="utf-8").read() + open(os.path.join(site, "app.js"), encoding="utf-8").read()
+    for gone in ("BMAD", "requirement.", "Section coverage", "mermaid"):
+        assert gone not in text, gone
+
+
 @pytest.mark.skipif(not shutil.which("node"), reason="node is needed to read data.js")
-def test_scene_6_the_site_is_a_view_of_the_graph_and_scene_7_readers_install_a_pack_or_sync_the_store():
+def test_scene_6_the_specification_is_a_page_of_the_graph_and_scene_7_readers_install_a_pack_or_sync_the_store():
     with tempfile.TemporaryDirectory() as root, tempfile.TemporaryDirectory() as home:
         # the product, specified, designed, flowed (scenes 2 to 5)
         assert oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--ontology", "product-report,ddd,flow", "--empty", "--project", root)[0] == 0
         assert oto_cli("curate", "start", "--project", root)[0] == 0
         _captured(root, CAPTURE, DESIGN, FLOW, FLOW_FIELDS)
-        # scene 6: the site, from the graph; nobody wrote data.js
+        # scene 6: the specification page, from the graph; nobody wrote its data
         code, out = oto_cli("build", "--project", root, "--target", "site", "--view", str(VIEW))
-        assert code == 0 and "site with app prd-site" in out, out
+        assert code == 0 and "site with app specification" in out, out
         site = os.path.join(root, "build", "site")
-        g = _globals(site)
-        assert g["PRD"]["overview"]["projectName"] == "Fund report automation"
-        assert {f["id"] for f in g["PRD"]["specs"]["functional"]} == {"requirement.fund-report.fr%d" % i for i in (1, 2, 3, 4)}
-        assert g["PRD"]["usecases"][0]["frs"] and g["PRD"]["specs"]["policies"][0]["id"] == "policy.fund-report.pol1"
-        assert g["ARCH"]["domains"][0]["components"][0]["id"] == "boundedcontext.fund-report.bc-def"
-        assert g["ARCH"]["domains"][0]["components"][0]["resource"] == ["component.fund-report.cmp-def"]
-        assert g["ARCH"]["decisions"][0]["affects"] == ["aggregate.fund-report.agg-def"]
-        assert g["ARCH"]["stack"] == [] and g["PRD"]["glossary"] == [], "a section no pack covers is empty, not invented"
-        assert os.path.exists(os.path.join(site, "index.html")) and os.path.exists(os.path.join(site, "publish.sh"))
+        spec = _spec(site)
+        _plain(site)
+        assert spec["product"]["name"] == "Fund report automation"
+        assert {r["name"] for r in spec["requirements"]} >= {"Produce the fund profile monthly, in English and French, as PDF"}
+        assert len(spec["requirements"]) == 4 and spec["policies"][0]["kind"] == "compliance"
+        render = next(r for r in spec["requirements"] if r["id"] == "requirement.fund-report.fr1")
+        assert {m["name"] for m in render["met_by"]} >= {"Render job"}, "what in the design meets it, by name"
+        assert spec["terms"] == [] and spec["journeys"] == [], "a topic nobody recorded is empty, not invented"
+        assert os.path.exists(os.path.join(site, "_studio", "studio.js")), "the page carries the studio's kit"
         # scene 6: the domain pack to a marketplace, the product's store and site to a query repository
         sandbox = {"OTO_ONTOLOGIES": os.path.join(home, "ontologies"), "OTO_PACKS": os.path.join(home, "packs"),
                    "OTO_REGISTRIES": os.path.join(home, "registries.json")}
@@ -337,59 +344,61 @@ def test_scene_6_the_site_is_a_view_of_the_graph_and_scene_7_readers_install_a_p
         assert code == 0 and "Read every value from a finished column" in out, out
         code, out = oto_cli("query", "--project", synced, "brief", "implement-step", env=sandbox)
         assert code == 0 and "4 READY, 0 BLOCKED" in out, out
-        assert os.path.exists(os.path.join(synced, "site", "data.js")), "the site travels with the store"
+        assert os.path.exists(os.path.join(synced, "site", "data.js")), "the page travels with the store"
 
 
 def test_atlas_starts_a_product_from_the_product_pack_with_its_type_its_architecture_its_pattern_and_the_flow():
-    # the pack: Atlas and the specification's skills, the product vocabulary and the site view, validated together
+    # the pack: Atlas and the specification's skill, the product vocabulary and the specification page, validated together
     code, out = oto_cli("pack", "check", str(PACK))
-    assert code == 0 and "check clean" in out and "4 skill(s), 1 view(s)" in out, out
+    assert code == 0 and "check clean" in out and "3 skill(s), 1 view(s)" in out, out
     with tempfile.TemporaryDirectory() as root:
         # scene 1, as Atlas runs it: the pack, with the product type, the architecture, DDD for its application and the flow
         code, out = oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--pack", str(PACK),
                             "--ontology", "product-report,software-architecture,ddd,flow", "--empty", "--project", root)
-        assert code == 0 and "pack: product @" in out and "wrote: views/prd-site" in out, out
+        assert code == 0 and "pack: product @" in out and "wrote: views/specification" in out, out
         code, out = oto_cli("status", "--project", root)
         assert code == 0 and "via pack product" in out, out
         # scenes 2 to 5 against it: the specification, the design, the flow, through the gates
         assert oto_cli("curate", "start", "--project", root)[0] == 0
         _captured(root, CAPTURE, DESIGN, FLOW, FLOW_FIELDS)
-        # scene 6: the site by name, from the project's own views
-        code, out = oto_cli("build", "--project", root, "--target", "site", "--view", "prd-site")
-        assert code == 0 and "site with app prd-site" in out, out
-        g = _globals(os.path.join(root, "build", "site"))
-        assert g["PRD"]["overview"]["projectName"] == "Fund report automation"
-        assert g["ARCH"]["domains"][0]["components"][0]["id"] == "boundedcontext.fund-report.bc-def"
+        # scene 6: the studio, every page the project's packs bring, from the graph
+        code, out = oto_cli("build", "--project", root, "--target", "site")
+        assert code == 0 and "site with a home page and" in out and "specification" in out, out
+        site = os.path.join(root, "build", "site")
+        spec = _spec(os.path.join(site, "specification"))
+        _plain(os.path.join(site, "specification"))
+        assert spec["product"]["name"] == "Fund report automation" and len(spec["requirements"]) == 4
+        studio = open(os.path.join(site, "_studio", "data.js"), encoding="utf-8").read()
+        assert '"title":"The specification"' in studio and '"place":"product"' in studio
 
 
-def test_a_product_with_no_ddd_part_starts_from_the_same_pack_and_its_site_has_no_ddd_pages():
+def test_a_product_with_no_ddd_part_starts_from_the_same_pack_and_its_specification_shows():
     with tempfile.TemporaryDirectory() as root:
         code, out = oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--pack", str(PACK),
                             "--ontology", "product-report,software-architecture,flow", "--empty", "--project", root)
-        assert code == 0 and "wrote: views/prd-site" in out, out
+        assert code == 0 and "wrote: views/specification" in out, out
         vocabulary = json.load(open(os.path.join(root, "ontology.config.json"), encoding="utf-8"))
         assert "System" in vocabulary["classes"] and "Aggregate" not in vocabulary["classes"], "no pattern assumed"
         assert oto_cli("curate", "start", "--project", root)[0] == 0
         _captured(root, CAPTURE)
-        code, out = oto_cli("build", "--project", root, "--target", "site", "--view", "prd-site")
-        assert code == 0 and "site with app prd-site" in out, out
-        g = _globals(os.path.join(root, "build", "site"))
-        assert len(g["PRD"]["specs"]["functional"]) == 4, "the specification is there"
-        assert g["PRD"]["usecases"] == [] and g["ARCH"]["domains"] == [] and g["ARCH"]["integrations"] == [], \
-            "the DDD pages are optional: empty without ddd"
+        code, out = oto_cli("build", "--project", root, "--target", "site", "--view", "specification")
+        assert code == 0 and "site with app specification" in out, out
+        spec = _spec(os.path.join(root, "build", "site"))
+        assert len(spec["requirements"]) == 4, "the specification is there"
+        assert all(r["met_by"] == [] for r in spec["requirements"]), "nothing designed yet meets them"
 
 
-def test_a_product_with_no_architecture_yet_has_an_empty_architecture_half():
-    """The site's architecture half is optional: a product specified before it is designed shows its PRD."""
+def test_a_product_with_no_architecture_yet_shows_its_specification():
+    """What meets a requirement is optional: a product specified before it is designed shows its specification."""
     with tempfile.TemporaryDirectory() as root:
         code, out = oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--pack", str(PACK),
                             "--ontology", "product-report", "--empty", "--project", root)
-        assert code == 0 and "wrote: views/prd-site" in out, out
+        assert code == 0 and "wrote: views/specification" in out, out
         vocabulary = json.load(open(os.path.join(root, "ontology.config.json"), encoding="utf-8"))
         assert "Component" not in vocabulary["classes"], "no architecture vocabulary assumed"
         assert oto_cli("curate", "start", "--project", root)[0] == 0
         _captured(root, CAPTURE)
-        code, out = oto_cli("build", "--project", root, "--target", "site", "--view", "prd-site")
-        assert code == 0 and "site with app prd-site" in out, out
-        g = _globals(os.path.join(root, "build", "site"))
-        assert len(g["PRD"]["specs"]["functional"]) == 4 and g["ARCH"]["domains"] == []
+        code, out = oto_cli("build", "--project", root, "--target", "site", "--view", "specification")
+        assert code == 0 and "site with app specification" in out, out
+        spec = _spec(os.path.join(root, "build", "site"))
+        assert len(spec["requirements"]) == 4 and all(r["met_by"] == [] for r in spec["requirements"])

@@ -9,7 +9,7 @@ ontology that lives in its own repository are kept with it instead (`report`, `p
 
 | Pack | Vocabulary | What it brings |
 |---|---|---|
-| `product` | `product` | Atlas, the product playbook; `prd-build`; the `prd-site` view (below) |
+| `product` | `product` | Atlas, the product playbook; `prd-build`; the specification page of the product's studio (below) |
 | `software-architecture` | `software-architecture` | A product's architecture, pattern-neutral: `architecture-build`, which hands each part to the pattern pack it follows, found in `oto status` |
 | `ddd` | `ddd` | Domain-driven design for a part of a product: `model-domain`; a pattern of `software-architecture` |
 | `work` | `work` | Work items and milestones over a product's requirements, features and components; `feature-flow`, a feature through the gates |
@@ -83,7 +83,7 @@ only in a product that composes `software-architecture`; its DDD pages only with
 | **prd-build** | The specification, captured against `product` (in the pack) and the product type merged beside it (`product-report`, …). |
 | **architecture-build** | In the `software-architecture` pack. The design: the architecture, pattern-neutral, then each part handed to the pattern pack it follows, found in `oto status --json` (each pack's `pattern`), never named. |
 | **feature-flow** | In the `work` pack. A feature through the gates, read from the graph: the idea against the product's purpose (`kg_ask`), the impact on the design and the flow (`kg_neighbors`, `kg_brief impact-*`), the scenarios, then each step test-first through the flow pack's **implement-step** — BLOCKED by name until the missing fact is captured. |
-| **prd-site** | The navigable site, this pack's view `prd-site`, installed in every project that declares the pack and listed on its home page: `data.js` is written from the graph by the engine, never by hand. |
+| **The specification page** | This pack's view in the product's studio (`views/specification`): why the product exists, who it is for, what it must do, its rules, releases, risks, decisions and open questions, as sentences read from the graph, never edited by hand. The studio gathers every pack's page; the product type's pack gives the front page. |
 
 What left in version 2: `knowledge-graph` and the mesh ontology (the packs are the ontology; the
 knowledge base is the graph), the built-in section lists of `prd-build` and `architecture-build`
