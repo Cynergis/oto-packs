@@ -42,7 +42,8 @@ def _same(a, b):
 
 
 def test_there_are_packs():
-    assert {"prd-architecture-studio", "ddd", "work"} <= set(PACKS)
+    assert {"product", "software-architecture", "ddd", "work"} <= set(PACKS)
+    assert "prd-architecture-studio" not in PACKS, "the studio is the project's assembled site, not a pack"
 
 
 @pytest.mark.parametrize("pack", PACKS)

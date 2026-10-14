@@ -17,16 +17,20 @@ This skill comes with the `work` pack. The ontology is inside the pack, so nothi
    ```
 
    `${CLAUDE_PLUGIN_ROOT}` is this pack's directory; Claude Code fills it in. Outside Claude Code,
-   with the pack on the machine (`oto pack add work` from the cynergis registry), `oto init --pack work` does the same.
+   with the pack on the machine (`oto pack add work`), `oto init --pack work` does the same.
    The project records the ontology's origin, so `oto status` says when a newer release exists and
    `oto ontology diff` shows what changed. Add `--ontology <name>,...` to merge other ontologies
    with the pack's (a product type, the flow).
 
-2. **Run the ontology-interview skill** to fit the vocabulary to the documents at hand.
+2. **Go on with this pack's skills**, written for this domain:
 
-3. **Hand over** to the build-knowledge-base skill for the documents, and to the query-knowledge
-   skill for questions. The engine plugin `oto` comes with this pack: the `kg_*` tools and the
-   generic skills are available once it is installed.
+   - **work:feature-flow**: Governed, gated process for adding or changing a product feature, read from the knowledge base.
+
+3. **For anything else, the engine's skills**: capture-form to answer the vocabulary's
+   questions in an interview, ontology-interview to fit the vocabulary to the documents at hand,
+   build-knowledge-base for a folder of documents, query-knowledge for questions. The engine
+   plugin `oto` comes with this pack: the `kg_*` tools and the generic skills are available once
+   it is installed.
 
 ## What the ontology declares
 

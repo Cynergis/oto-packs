@@ -9,15 +9,17 @@ ontology that lives in its own repository are kept with it instead (`report`, `p
 
 | Pack | Vocabulary | What it brings |
 |---|---|---|
+| `product` | `product` | Atlas, the product playbook; `prd-build`; the `prd-site` view (below) |
 | `software-architecture` | `software-architecture` | A product's architecture, pattern-neutral: `architecture-build`, which hands each part to the pattern pack it follows, found in `oto status` |
-| `prd-architecture-studio` | `software-architecture` | Atlas and the studio's skills, and the `prd-site` view (below; its parts move to the `software-architecture` and `product` packs, then it is removed) |
 | `ddd` | `ddd` | Domain-driven design for a part of a product: `model-domain`; a pattern of `software-architecture` |
-| `work` | `work` | Work items and milestones over a product's requirements, features and components |
+| `work` | `work` | Work items and milestones over a product's requirements, features and components; `feature-flow`, a feature through the gates |
 | `auto-claims` | `auto-claims` | Motor vehicle claims: policy, coverage, claim, incident, handling, money in and out |
 | `organization-process` | `organization-process` | How an organisation works: units, roles, processes, policies, systems and measures |
 | `professional-services` | `professional-services` | Engagements: scope, deliverables, governance, sessions, decisions and the work that follows |
 
-This repository was `prd-architecture-studio` until 2026-10-14; GitHub redirects the old name.
+This repository was `prd-architecture-studio` until 2026-10-14; GitHub redirects the old name. The
+studio plugin is gone: its parts live in the packs above, and "the studio" is now what a product
+project shows, its home page with every view its packs bring (`oto serve --http`).
 
 ## Changing a pack, and releasing it
 
@@ -43,35 +45,31 @@ was last published with.
 |---|---|
 | `packs/<name>/` | A pack: `manifest.json` (its release, the ontology it embeds, the engine it needs), `ontology/` (the embedded ontology and its bases, written by `oto pack refresh`), `skills/`, `views/`; `.claude-plugin/plugin.json` and `skills/start/` are generated. |
 | `tests/test_packs.py` | Every pack checks clean and matches the engine's ontologies. |
-| `tests/test_scenes.py`, `fixtures/` | The studio's scenes on a report product, scripted; not published. |
+| `tests/test_scenes.py`, `fixtures/` | Atlas's scenes on a report product, scripted, from the `product` pack; not published. |
 | `GETTING-STARTED.md`, `WALKTHROUGH.md`, `PUBLISH.md`, `publish-plugins.sh` | The studio's guides. |
 
 CI also refuses client names and credentials (`oto publishable --strict`, `.github/workflows/publishable.yml`).
 
-## The PRD & Architecture Studio pack
+## The product pack: Atlas and the PRD
 
 Atlas, the Lead Product Engineer, and the skills that carry a product from an idea to a published
-knowledge base that other people query. The studio is the front door of [OTO](https://github.com/Cynergis/oto)'s
-arc: it captures a product's specification and design **against OTO packs**, contributes every
-confirmed section to the knowledge base **as it goes**, through the curate gates, and carries no
-graph of its own.
+knowledge base that other people query: the specification and the design captured **against OTO
+packs**, every confirmed section contributed to the knowledge base **as it goes**, through the curate
+gates, with no graph of its own.
 
-It is an **OTO pack**, `packs/prd-architecture-studio/`: its skills, the vocabulary every product
-shares (`software-architecture`, which brings `product` and `portfolio`: the specification and a
-pattern-neutral architecture) and the `prd-site` view, released and checked together (`oto pack
-check`). A product starts from the pack with its type, the design patterns its parts follow and
-the flow merged beside it:
+`packs/product/` embeds `product` (on `portfolio`): the specification. A product starts from it with
+its type, its architecture, the design patterns its parts follow and the flow merged beside it, the
+packs installed first so the project declares them:
 
 ```bash
-oto init --empty --pack prd-architecture-studio --ontology product-report,ddd,flow --project <root>
+oto init --empty --pack product --ontology product-report,software-architecture,ddd,flow --project <root>
 ```
 
-Atlas runs that in scene 1. A pattern is per part, not per product: DDD for an application (the
-`ddd` pack), the medallion pattern for its data pipeline (the `medallion` pack, with
-`report-medallion` when a report reads it), or none. The site's DDD pages are optional
-(`$optional`), so they fill only in a product that adds `ddd`. It needs OTO 0.11.12 or later, which
-finds the ontology of an installed pack by name, declares the plugins the project uses in its
-`.claude/settings.json`, and records the tools in `oto.lock.json` (commit both).
+Atlas runs that in scene 1. A pattern is per part, not per product: each is a pack that says what
+it is a pattern of (`oto pack list --patterns`), and the `software-architecture` pack's
+`architecture-build` hands each part to it. The site's architecture half is optional, and fills
+only in a product that composes `software-architecture`; its DDD pages only with `ddd`. It needs OTO
+0.11.17 or later.
 
 ### The arc
 
@@ -84,9 +82,9 @@ finds the ontology of an installed pack by name, declares the plugins the projec
 | **atlas** | The one owner of the arc. "Atlas, lead this product." Asks which kind of product and what you have, then runs the scenes, stopping at every gate; "run the studio" runs them all in one go. Orients with `oto status`; never voices a second persona. |
 | **elicit** | The elicitation: runs OTO's **capture-form** on a pack's `capture.json` (the questions by asker, the classes with their fields and links, every field carrying its term) with the BMAD menu at every confirmation (**[A]** elicit, **[P]** perspectives, **[C]** continue); on every **C** the section goes through `oto curate propose`, `add` and `check`, and the graph's answers are reported (`oto query questions`). |
 | **prd-build** | The specification, captured against `product` (in the pack) and the product type merged beside it (`product-report`, …). |
-| **architecture-build** | The design: the architecture against `software-architecture` (in the pack), then each part with the pattern it follows, modelled by the pattern's pack (`ddd:model-domain` for DDD, `medallion:design-pipeline` for a data pipeline). |
-| **feature-flow** | A feature through the gates, read from the graph: the idea against the product's purpose (`kg_ask`), the impact on the design and the flow (`kg_neighbors`, `kg_brief impact-*`), the scenarios, then each step test-first through the flow pack's **implement-step** — BLOCKED by name until the missing fact is captured. |
-| **prd-site** | The navigable site, the pack's view `prd-site`, installed in the project when it starts from the pack: `data.js` is written from the graph by the engine on every build, never by hand. |
+| **architecture-build** | In the `software-architecture` pack. The design: the architecture, pattern-neutral, then each part handed to the pattern pack it follows, found in `oto status --json` (each pack's `pattern`), never named. |
+| **feature-flow** | In the `work` pack. A feature through the gates, read from the graph: the idea against the product's purpose (`kg_ask`), the impact on the design and the flow (`kg_neighbors`, `kg_brief impact-*`), the scenarios, then each step test-first through the flow pack's **implement-step** — BLOCKED by name until the missing fact is captured. |
+| **prd-site** | The navigable site, this pack's view `prd-site`, installed in every project that declares the pack and listed on its home page: `data.js` is written from the graph by the engine, never by hand. |
 
 What left in version 2: `knowledge-graph` and the mesh ontology (the packs are the ontology; the
 knowledge base is the graph), the built-in section lists of `prd-build` and `architecture-build`
@@ -94,7 +92,9 @@ knowledge base is the graph), the built-in section lists of `prd-build` and `arc
 In 2.1.0: `studio` folded into `atlas` ("run the studio" still works), `capture` renamed `elicit`
 so it is not mistaken for OTO's `capture`. After 2.1.1 the studio became a pack: its version
 follows the pack's release (`<release>.0.0`, from 1.0.0), so an installed 2.x plugin is
-uninstalled and the pack installed, not updated.
+uninstalled and the pack installed, not updated. On 2026-10-14 the studio pack (release 4) was split: Atlas,
+`prd-build`, `elicit` and the site into `product`, `architecture-build` into `software-architecture`,
+`feature-flow` into `work`.
 
 ### How it fits with OTO
 
