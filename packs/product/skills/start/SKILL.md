@@ -10,6 +10,14 @@ A product's specification and its playbook: Atlas, who carries a product from an
 
 This skill comes with the `product` pack. The ontology is inside the pack, so nothing is fetched.
 
+## Talking with the person
+
+- **Plain, natural language, in the person's words.** Never say question numbers, ids, class or
+  field names, file names or commands, and never paste what a command printed.
+- **Technical details only when the person asks for them.** Never offer them, not even as a choice.
+- **The same clear shape every time:** say what we are about to do, ask a few questions at a time,
+  read back what you understood in plain sentences, confirm, then say what is next.
+
 **A playbook**: for a product, from an idea to a published knowledge base: its specification, its design, its build and its readers. This pack's **atlas** skill (`/product:atlas`) leads it from start to end; OTO's
 concierge offers it, and says where the project is at any point.
 
