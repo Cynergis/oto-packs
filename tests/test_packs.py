@@ -61,3 +61,16 @@ def test_the_pack_embeds_the_engines_own_ontologies(pack):
             "%s embeds %s, which the engine does not ship: it belongs in the repository of that ontology" % (pack, unit)
         assert _same(str(embedded / unit), shipped), \
             "packs/%s embeds an outdated %s: oto pack refresh packs/%s" % (pack, unit, pack)
+
+
+def test_the_architecture_skill_finds_patterns_and_never_names_them():
+    """A new pattern pack must not need an edit here: architecture-build reads the project's patterns
+    from `oto status --json` (each pack's `pattern`) and names none of them."""
+    text = (ROOT / "packs" / "software-architecture" / "skills" / "architecture-build" / "SKILL.md").read_text(encoding="utf-8")
+    assert "oto status --project <root> --json" in text and "`pattern`" in text and "`for`" in text and "`skill`" in text
+    for name in ("ddd", "medallion", "model-domain", "design-pipeline", "bounded context", "bronze"):
+        assert name not in text.lower(), "architecture-build names %r: a pattern should be found, not named" % name
+    for pack in PACKS:
+        manifest = json.load(open(ROOT / "packs" / pack / "manifest.json", encoding="utf-8"))
+        if manifest.get("pattern"):
+            assert manifest["pattern"]["of"] == "software-architecture", pack

@@ -9,8 +9,9 @@ ontology that lives in its own repository are kept with it instead (`report`, `p
 
 | Pack | Vocabulary | What it brings |
 |---|---|---|
-| `prd-architecture-studio` | `software-architecture` | Atlas and the studio's skills, and the `prd-site` view (below; to be split into a `product` and a `software-architecture` pack) |
-| `ddd` | `ddd` | Domain-driven design for a part of a product: `model-domain` |
+| `software-architecture` | `software-architecture` | A product's architecture, pattern-neutral: `architecture-build`, which hands each part to the pattern pack it follows, found in `oto status` |
+| `prd-architecture-studio` | `software-architecture` | Atlas and the studio's skills, and the `prd-site` view (below; its parts move to the `software-architecture` and `product` packs, then it is removed) |
+| `ddd` | `ddd` | Domain-driven design for a part of a product: `model-domain`; a pattern of `software-architecture` |
 | `work` | `work` | Work items and milestones over a product's requirements, features and components |
 | `auto-claims` | `auto-claims` | Motor vehicle claims: policy, coverage, claim, incident, handling, money in and out |
 | `organization-process` | `organization-process` | How an organisation works: units, roles, processes, policies, systems and measures |
