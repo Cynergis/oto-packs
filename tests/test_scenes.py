@@ -7,6 +7,7 @@ until the missing fact is captured, then READY (scene 5), the site rendered from
 domain pack on a marketplace and the product's store and site published (scene 6), and two
 readers: one installs the pack and asks, one syncs the store and asks (scene 7). Needs the engine importable (`OTO_HOME`, or `oto-kg` installed)
 and the `product` and `product-report` packs on the machine (`oto ontology list`)."""
+import copy
 import json
 import os
 import pathlib
@@ -24,7 +25,7 @@ if (OTO / "oto" / "__init__.py").exists() and str(OTO) not in sys.path:
 try:
     import oto  # noqa: F401
     from oto.model import ontologies
-    HAVE = all(ontologies.dir_for(name) is not None for name in ("product", "product-report", "ddd", "agent", "flow"))
+    HAVE = all(ontologies.dir_for(name) is not None for name in ("product", "product-report", "ddd", "agent", "platform", "flow"))
 except ImportError:
     HAVE = False
 pytestmark = pytest.mark.skipif(not HAVE, reason="OTO and the product, product-report packs are needed")
@@ -34,6 +35,7 @@ DESIGN = ROOT / "fixtures" / "capture-report-design.json"
 FLOW = ROOT / "fixtures" / "capture-report-flow.json"
 FLOW_FIELDS = ROOT / "fixtures" / "capture-report-flow-fields.json"
 AGENT = ROOT / "fixtures" / "capture-report-agent.json"
+PLATFORM = ROOT / "fixtures" / "capture-report-platform.json"
 
 
 def _captured(root, *captures):
@@ -193,6 +195,57 @@ def test_scene_4_the_gates_refuse_an_agent_that_acts_alone_where_a_person_must_c
         code, out = oto_cli("curate", "check", "--project", root)
         assert code != 0 and "ready to apply" not in out, out
         assert "acts alone with a tool that needs a person's confirmation" in out, out
+
+
+def _designed(root):
+    """The product specified and designed, applied: what the binding is about."""
+    assert oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--ontology", "product-report,ddd,platform", "--empty", "--project", root)[0] == 0
+    assert oto_cli("curate", "start", "--project", root)[0] == 0
+    _captured(root, CAPTURE, DESIGN)
+    assert oto_cli("curate", "start", "--project", root)[0] == 0
+
+
+def test_scene_4_where_it_runs_is_bound_and_every_part_can_be_built_deployed_and_tested():
+    """The binding adds to what the design captured (a component's service, an environment's region)
+    by restating it unchanged with the new facts; then every brief is READY."""
+    with tempfile.TemporaryDirectory() as root:
+        _designed(root)
+        _captured(root, PLATFORM)
+        for task, param in (("implement-component", "COMPONENT=component.fund-report.cmp-render"),
+                            ("deploy-component", "COMPONENT=component.fund-report.cmp-render"),
+                            ("deploy-component", "COMPONENT=component.fund-report.cmp-gate"),
+                            ("test-end-to-end", "ENVIRONMENT=environment.fund-report.env-prod")):
+            code, out = oto_cli("query", "--project", root, "brief", task, param)
+            assert code == 0 and "->  READY" in out, (task, param, out)
+        code, out = oto_cli("query", "--project", root, "ask", "PL10", "CHOICE=choice.fund-report.ch-templates")
+        assert code == 0 and "Jinja2" in out and "Lead architect" in out, "the builder's pick, confirmed: " + out
+
+
+def test_scene_4_a_missing_detail_blocks_the_agent_and_a_pick_outside_its_limits_is_refused():
+    platform = json.load(open(PLATFORM, encoding="utf-8"))
+    with tempfile.TemporaryDirectory() as root:
+        _designed(root)
+        no_gate = copy.deepcopy(platform)
+        pipe = next(i for i in no_gate["items"] if i["id"] == "PIPE-APP")
+        pipe["links"]["deploys"].remove("CMP-GATE")
+        partial = os.path.join(root, "platform-partial.json")
+        json.dump(no_gate, open(partial, "w", encoding="utf-8"))
+        _captured(root, partial)
+        code, out = oto_cli("query", "--project", root, "brief", "deploy-component", "COMPONENT=component.fund-report.cmp-gate")
+        assert code == 0 and "->  READY" not in out and "blocked on: PL6" in out and "no pipeline deploys it" in out, out
+        code, out = oto_cli("query", "--project", root, "brief", "test-end-to-end", "ENVIRONMENT=environment.fund-report.env-prod")
+        assert code == 0 and "->  READY" not in out and "PL11" in out, "one part cannot be deployed, so nothing is tested end to end: " + out
+    with tempfile.TemporaryDirectory() as root:
+        _designed(root)
+        outside = copy.deepcopy(platform)
+        next(i for i in outside["items"] if i["id"] == "DEC-TEMPLATES")["fields"]["option"] = "Handlebars"
+        picked = os.path.join(root, "platform-outside.json")
+        json.dump(outside, open(picked, "w", encoding="utf-8"))
+        code, out = oto_cli("curate", "propose", "--project", root, "--from", picked)
+        assert code == 0, out
+        assert oto_cli("curate", "add", "--project", root, "--from", os.path.join(root, "proposals", outside["doc"] + ".json"))[0] == 0
+        code, out = oto_cli("curate", "check", "--project", root)
+        assert code != 0 and "settled with an option it was not allowed" in out, out
 
 
 def test_scene_4_the_flow_is_captured_against_flow_and_scene_5_the_agent_is_blocked_by_name_then_ready():

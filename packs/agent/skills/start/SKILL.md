@@ -18,6 +18,9 @@ This skill comes with the `agent` pack. The ontology is inside the pack, so noth
 - **The same clear shape every time:** say what we are about to do, ask a few questions at a time,
   read back what you understood in plain sentences, confirm, then say what is next.
 
+**A design pattern of `software-architecture`**: for a part of a product that people give work to through an agent rather than a screen: the jobs they hand it, its tools and guardrails, how it talks, and the test conversations that prove each job. In a project that composes `software-architecture`, such a part is modelled
+with this pack's **design-agent** skill (`/agent:design-agent`); `oto status` lists the project's patterns.
+
 1. **Start a project from this pack.**
 
    ```bash
@@ -30,11 +33,15 @@ This skill comes with the `agent` pack. The ontology is inside the pack, so noth
    `oto ontology diff` shows what changed. Add `--ontology <name>,...` to merge other ontologies
    with the pack's (a product type, the flow).
 
-2. **Run the ontology-interview skill** to fit the vocabulary to the documents at hand.
+2. **Go on with this pack's skills**, written for this domain:
 
-3. **Hand over** to the build-knowledge-base skill for the documents, and to the query-knowledge
-   skill for questions. The engine plugin `oto` comes with this pack: the `kg_*` tools and the
-   generic skills are available once it is installed.
+   - **agent:design-agent**: Design a part of a product that people give work to through an agent rather than a screen, in an OTO project that composes `agent`.
+
+3. **For anything else, the engine's skills**: capture-form to answer the vocabulary's
+   questions in an interview, ontology-interview to fit the vocabulary to the documents at hand,
+   build-knowledge-base for a folder of documents, query-knowledge for questions. The engine
+   plugin `oto` comes with this pack: the `kg_*` tools and the generic skills are available once
+   it is installed.
 
 ## What the ontology declares
 
