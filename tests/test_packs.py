@@ -85,3 +85,11 @@ def test_no_pack_keeps_an_elicit_skill_or_names_the_studio():
             text = skill.read_text(encoding="utf-8")
             assert "**elicit**" not in text and "elicit skill" not in text, skill
             assert "a studio's" not in text and "--pack <studio>" not in text, skill
+
+
+def test_atlas_is_the_product_packs_playbook_and_leaves_orientation_to_the_concierge():
+    manifest = json.load(open(ROOT / "packs" / "product" / "manifest.json", encoding="utf-8"))
+    assert manifest["playbook"]["skill"] == "atlas"
+    text = (ROOT / "packs" / "product" / "skills" / "atlas" / "SKILL.md").read_text(encoding="utf-8")
+    assert "**Where are we**" not in text and "concierge" in text
+    assert "7. **Where are we**" not in text

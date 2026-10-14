@@ -10,6 +10,9 @@ A product's specification and its playbook: Atlas, who carries a product from an
 
 This skill comes with the `product` pack. The ontology is inside the pack, so nothing is fetched.
 
+**A playbook**: for a product, from an idea to a published knowledge base: its specification, its design, its build and its readers. This pack's **atlas** skill (`/product:atlas`) leads it from start to end; OTO's
+concierge offers it, and says where the project is at any point.
+
 1. **Start a project from this pack.**
 
    ```bash
@@ -24,7 +27,7 @@ This skill comes with the `product` pack. The ontology is inside the pack, so no
 
 2. **Go on with this pack's skills**, written for this domain:
 
-   - **product:atlas**: Atlas, the Lead Product Engineer.
+   - **product:atlas**: Atlas, the Lead Product Engineer, the product pack's playbook.
    - **product:prd-build**: Build a product's specification (the PRD) as a knowledge base.
    - **product:prd-site**: Serve or publish the navigable PRD + Architecture site as a view of the knowledge base.
 
