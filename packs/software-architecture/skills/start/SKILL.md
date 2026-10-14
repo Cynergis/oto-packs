@@ -59,6 +59,10 @@ OTO lists them; the caller invokes (the act skill):
 - `action.create-repository` on Repository: Creates the repository an intended Repository fact describes, under its owner, and records the result. Changes the world: a person confirms it by name.
 - `action.probe-interface` on Interface: Calls an interface's base URL with a GET and keeps the response as a source document, so what the interface actually answers can be read and curated.
 
+## The views it ships
+
+- `architecture`: `oto serve --http <port> --view architecture`, or `oto build --target site --view architecture`
+
 ## The guide
 
 # Reading a software-architecture graph

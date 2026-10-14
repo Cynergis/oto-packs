@@ -219,6 +219,26 @@ def test_scene_4_where_it_runs_is_bound_and_every_part_can_be_built_deployed_and
             assert code == 0 and "->  READY" in out, (task, param, out)
         code, out = oto_cli("query", "--project", root, "ask", "PL10", "CHOICE=choice.fund-report.ch-templates")
         assert code == 0 and "Jinja2" in out and "Lead architect" in out, "the builder's pick, confirmed: " + out
+        if shutil.which("node"):
+            # the studio's pages: where it runs, and how it is designed
+            runs_view = ROOT / "packs" / "platform" / "views" / "where-it-runs"
+            code, out = oto_cli("build", "--project", root, "--target", "site", "--view", str(runs_view))
+            assert code == 0 and "site with app where-it-runs" in out, out
+            runs = _page_data(os.path.join(root, "build", "site"), "__RUNS__")
+            prod = runs["environments"][0]
+            assert prod["region"] == "northamerica-northeast1" and prod["account"][0]["identifier"] == "example-fund-reports-prod"
+            render = next(p for p in runs["parts"] if p["name"] == "Render job")
+            assert {t["name"] + " " + t["version"] for t in render["built_with"]} == {"Python 3.12", "Jinja2 3.1"}
+            pick = next(c for c in runs["choices"] if c["name"] == "The render job's template library")
+            assert pick["authority"] == "delegated" and pick["settled_by"][0]["option"] == "Jinja2" and pick["settled_by"][0]["status"] == "accepted"
+            arch_view = ROOT / "packs" / "software-architecture" / "views" / "architecture"
+            code, out = oto_cli("build", "--project", root, "--target", "site", "--view", str(arch_view))
+            assert code == 0 and "site with app architecture" in out, out
+            arch = _page_data(os.path.join(root, "build", "site"), "__ARCH__")
+            assert {c["name"] for c in arch["components"]} == {"Definition service", "Render job", "Release gate"}
+            render = next(c for c in arch["components"] if c["name"] == "Render job")
+            assert {m["name"] for m in render["meets"]} >= {"Produce the fund profile monthly, in English and French, as PDF"}
+            assert render["carries"][0]["type"] == "BoundedContext", "its domain model, from the pattern"
 
 
 def test_scene_4_a_missing_detail_blocks_the_agent_and_a_pick_outside_its_limits_is_refused():
@@ -276,14 +296,18 @@ def test_scene_4_the_flow_is_captured_against_flow_and_scene_5_the_agent_is_bloc
         assert code == 0 and "->  READY" in out and "[1 fact(s)]" in out, "the check compared to it: " + out
 
 
-def _spec(site):
-    """The specification page's data.js, read as the browser would."""
+def _page_data(site, name):
+    """A page's data.js, read as the browser would: the global it sets."""
     r = subprocess.run(["node", "-e", "const fs=require('fs'),vm=require('vm');const w={};"
                         "vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8'),{window:w});"
-                        "console.log(JSON.stringify(w.__SPEC__))", os.path.join(site, "data.js")],
+                        "console.log(JSON.stringify(w[process.argv[2]]))", os.path.join(site, "data.js"), name],
                        capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
     return json.loads(r.stdout)
+
+
+def _spec(site):
+    return _page_data(site, "__SPEC__")
 
 
 def _plain(site):

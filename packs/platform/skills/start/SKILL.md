@@ -53,6 +53,10 @@ with this pack's **bind-platform** skill (`/platform:bind-platform`); `oto statu
 - **SecretRef**: A secret a component needs, recorded by its name and where it is kept, never by its value.
 - **Pipeline**: What builds and deploys a component or a store to its environments: a CI/CD pipeline, at a place people can open.
 
+## The views it ships
+
+- `where-it-runs`: `oto serve --http <port> --view where-it-runs`, or `oto build --target site --view where-it-runs`
+
 ## The guide
 
 # Reading a platform binding
