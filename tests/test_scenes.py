@@ -49,7 +49,7 @@ def _captured(root, *captures):
     assert oto_cli("build", "--project", root)[0] == 0
 
 
-PACK = ROOT / "packs" / "prd-architecture-studio"
+PACK = ROOT / "packs" / "product"
 VIEW = PACK / "views" / "prd-site"
 
 
@@ -248,17 +248,17 @@ def test_scene_6_the_site_is_a_view_of_the_graph_and_scene_7_readers_install_a_p
         assert os.path.exists(os.path.join(synced, "site", "data.js")), "the site travels with the store"
 
 
-def test_the_studio_is_a_pack_and_atlas_starts_a_product_from_it_with_its_type_its_pattern_and_the_flow():
-    # the pack: skills, the pattern-neutral architecture vocabulary and the site view, validated together
+def test_atlas_starts_a_product_from_the_product_pack_with_its_type_its_architecture_its_pattern_and_the_flow():
+    # the pack: Atlas and the specification's skills, the product vocabulary and the site view, validated together
     code, out = oto_cli("pack", "check", str(PACK))
-    assert code == 0 and "check clean" in out and "7 skill(s), 1 view(s)" in out, out
+    assert code == 0 and "check clean" in out and "5 skill(s), 1 view(s)" in out, out
     with tempfile.TemporaryDirectory() as root:
-        # scene 1, as Atlas runs it: the pack, with the product type, DDD for its application and the flow
+        # scene 1, as Atlas runs it: the pack, with the product type, the architecture, DDD for its application and the flow
         code, out = oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--pack", str(PACK),
-                            "--ontology", "product-report,ddd,flow", "--empty", "--project", root)
-        assert code == 0 and "pack: prd-architecture-studio @" in out and "wrote: views/prd-site" in out, out
+                            "--ontology", "product-report,software-architecture,ddd,flow", "--empty", "--project", root)
+        assert code == 0 and "pack: product @" in out and "wrote: views/prd-site" in out, out
         code, out = oto_cli("status", "--project", root)
-        assert code == 0 and "via pack prd-architecture-studio" in out, out
+        assert code == 0 and "via pack product" in out, out
         # scenes 2 to 5 against it: the specification, the design, the flow, through the gates
         assert oto_cli("curate", "start", "--project", root)[0] == 0
         _captured(root, CAPTURE, DESIGN, FLOW, FLOW_FIELDS)
@@ -273,7 +273,7 @@ def test_the_studio_is_a_pack_and_atlas_starts_a_product_from_it_with_its_type_i
 def test_a_product_with_no_ddd_part_starts_from_the_same_pack_and_its_site_has_no_ddd_pages():
     with tempfile.TemporaryDirectory() as root:
         code, out = oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--pack", str(PACK),
-                            "--ontology", "product-report,flow", "--empty", "--project", root)
+                            "--ontology", "product-report,software-architecture,flow", "--empty", "--project", root)
         assert code == 0 and "wrote: views/prd-site" in out, out
         vocabulary = json.load(open(os.path.join(root, "ontology.config.json"), encoding="utf-8"))
         assert "System" in vocabulary["classes"] and "Aggregate" not in vocabulary["classes"], "no pattern assumed"
@@ -285,3 +285,19 @@ def test_a_product_with_no_ddd_part_starts_from_the_same_pack_and_its_site_has_n
         assert len(g["PRD"]["specs"]["functional"]) == 4, "the specification is there"
         assert g["PRD"]["usecases"] == [] and g["ARCH"]["domains"] == [] and g["ARCH"]["integrations"] == [], \
             "the DDD pages are optional: empty without ddd"
+
+
+def test_a_product_with_no_architecture_yet_has_an_empty_architecture_half():
+    """The site's architecture half is optional: a product specified before it is designed shows its PRD."""
+    with tempfile.TemporaryDirectory() as root:
+        code, out = oto_cli("init", "--name", "Fund report automation", "--slug", "funds", "--pack", str(PACK),
+                            "--ontology", "product-report", "--empty", "--project", root)
+        assert code == 0 and "wrote: views/prd-site" in out, out
+        vocabulary = json.load(open(os.path.join(root, "ontology.config.json"), encoding="utf-8"))
+        assert "Component" not in vocabulary["classes"], "no architecture vocabulary assumed"
+        assert oto_cli("curate", "start", "--project", root)[0] == 0
+        _captured(root, CAPTURE)
+        code, out = oto_cli("build", "--project", root, "--target", "site", "--view", "prd-site")
+        assert code == 0 and "site with app prd-site" in out, out
+        g = _globals(os.path.join(root, "build", "site"))
+        assert len(g["PRD"]["specs"]["functional"]) == 4 and g["ARCH"]["domains"] == []

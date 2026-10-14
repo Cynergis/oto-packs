@@ -14,7 +14,7 @@ description: >
 Called `capture` before studio 2.1.0; renamed so it is not mistaken for OTO's **capture** (a
 spoken statement into the inbox). The pack knows what to ask. OTO's **capture-form** skill asks it: it reads `capture.json`, takes
 the questions group by group, and sends every confirmed group through the curate gates. Run it;
-this skill adds the studio's way of running it. You are a facilitator and a peer; never invent
+this skill adds the product pack's way of running it (until capture-form carries it, change plan step 10). You are a facilitator and a peer; never invent
 content the person has not confirmed.
 
 ## Which form

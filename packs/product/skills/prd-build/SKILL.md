@@ -14,11 +14,11 @@ description: >
 The PRD is the specification level of the knowledge base: what the product must do, for whom,
 under what rules, why. It is captured against packs, not against a form of this plugin's own.
 
-1. The project starts from this pack, which brings `product` (and the design's
-   `software-architecture`), with the product type's ontology merged beside it (`oto init --empty
-   --pack "${CLAUDE_PLUGIN_ROOT}" --ontology product-report,ddd,flow`, or Atlas's scene 1). If the
-   type's pack does not exist yet, capture against `product` alone and tell the person what a
-   type pack would add.
+1. The project starts from this pack, which brings `product`, with the product type's ontology
+   merged beside it, and the design's `software-architecture` and patterns when the product has a
+   design (`oto init --empty --pack "${CLAUDE_PLUGIN_ROOT}" --ontology
+   product-report,software-architecture,flow`, or Atlas's scene 1). If the type's pack does not
+   exist yet, capture against `product` alone and tell the person what a type pack would add.
 2. Run the **elicit** skill with the schema of that project. Its sections are the askers the
    packs name — the sponsor, the product owner, the builder, compliance, the report product
    owner, the data team — and its items are personas, journeys, requirements, policies, decisions,

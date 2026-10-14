@@ -11,9 +11,9 @@
     "ref": null,
     "path": null,
     "commit": null,
-    "embedded_at": "2026-10-13"
+    "embedded_at": "2026-10-14"
   },
-  "engine": ">=0.11",
+  "engine": ">=0.11.17",
   "maintainer": "Cynergis",
   "changelog": [
     {
