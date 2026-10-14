@@ -176,6 +176,21 @@ def test_scene_4_an_agent_part_is_captured_against_agent_and_traced_to_the_speci
         assert code == 0 and "Produce the fund profile monthly" in out and "acts_after_confirmation" in out, out
         code, out = oto_cli("query", "--project", root, "ask", "AG11", "AGENT=agent.fund-report.ag-tpl")
         assert code == 0 and "Template plugin" in out and "Fund report platform" in out, "the agent reaches what its tools reach: " + out
+        if shutil.which("node"):
+            # the studio's pages of the patterns: how people work with it, and the domain model
+            for view, name in (("agent", "__AGENT__"), ("domain-model", "__MODEL__")):
+                pack = "agent" if view == "agent" else "ddd"
+                code, out = oto_cli("build", "--project", root, "--target", "site", "--view", str(ROOT / "packs" / pack / "views" / view))
+                assert code == 0 and "site with app %s" % view in out, out
+                data = _page_data(os.path.join(root, "build", "site"), name)
+                if view == "agent":
+                    job = next(j for j in data["jobs"] if j["name"] == "Build a report's template from its sample PDF")
+                    assert job["autonomy"] == "acts_after_confirmation" and job["tests"][0]["result"] == "pass"
+                    assert {g["kind"] for g in data["guardrails"]} == {"confirm_first", "never", "limit"}
+                else:
+                    assert {c["name"] for c in data["contexts"]} == {"Definition", "Rendering"}
+                    assert data["relationships"][0]["pattern"] == "customer_supplier"
+                    assert data["contexts"][0]["carried_by"][0]["name"] == "Definition service"
 
 
 def test_scene_4_the_gates_refuse_an_agent_that_acts_alone_where_a_person_must_confirm():

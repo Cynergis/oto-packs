@@ -53,6 +53,10 @@ with this pack's **design-agent** skill (`/agent:design-agent`); `oto status` li
 - **Evaluation**: A test conversation that proves a job works: what the person asks, what the agent must do, what it must never do, and how it went the last time it ran.
 - **ConversationStyle**: How the agent talks with people: its voice, the shape of every exchange (what is next, a few questions, a read-back, a confirmation) and when it shows technical details.
 
+## The views it ships
+
+- `agent`: `oto serve --http <port> --view agent`, or `oto build --target site --view agent`
+
 ## The guide
 
 # Reading an agent graph

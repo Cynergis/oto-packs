@@ -143,9 +143,10 @@ def test_the_product_brings_its_specification_page_to_the_studio_and_the_old_sit
                 assert "prd-site" not in path.read_text(encoding="utf-8"), path
 
 
-def test_the_design_and_where_it_runs_pages_join_the_studio():
+def test_the_packs_pages_join_the_studio():
     for pack, name, place, shows in (("software-architecture", "architecture", "design", "Component"),
-                                     ("platform", "where-it-runs", "runs", "Environment")):
+                                     ("platform", "where-it-runs", "runs", "Environment"),
+                                     ("agent", "agent", "people", "Job"), ("ddd", "domain-model", "design", "BoundedContext")):
         view = ROOT / "packs" / pack / "views" / name
         app = json.load(open(view / "app.json", encoding="utf-8"))
         assert app["place"] == place and shows in app["shows"] and app["open"], name
