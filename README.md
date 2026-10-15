@@ -46,7 +46,7 @@ was last published with.
 | `packs/<name>/` | A pack: `manifest.json` (its release, the ontology it embeds, the engine it needs), `ontology/` (the embedded ontology and its bases, written by `oto pack refresh`), `skills/`, `views/`; `.claude-plugin/plugin.json` and `skills/start/` are generated. |
 | `tests/test_packs.py` | Every pack checks clean and matches the engine's ontologies. |
 | `tests/test_scenes.py`, `fixtures/` | Atlas's scenes on a report product, scripted, from the `product` pack; not published. |
-| `GETTING-STARTED.md`, `WALKTHROUGH.md`, `PUBLISH.md`, `publish-plugins.sh` | The studio's guides. |
+| `GETTING-STARTED.md`, `WALKTHROUGH.md`, `PUBLISH.md` | The studio's guides. |
 
 CI also refuses client names and credentials (`oto publishable --strict`, `.github/workflows/publishable.yml`).
 
